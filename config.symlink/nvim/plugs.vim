@@ -16,6 +16,7 @@ call plug#begin(stdpath('data') . '/plugged')
 " =================
 
 Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-surround'
 
 
 " fzf is used for file-finding and various other fuzzy finding windows
