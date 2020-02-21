@@ -71,3 +71,21 @@ nmap <leader>ve :vsplit $MYVIMRC<CR>
 nmap <leader>vr :source $MYVIMRC<CR>
 
 " end v(im) section
+
+" ==========================
+" Working with fzf
+" ==========================
+
+" files in current project
+nmap <leader>pf :Files<CR>
+
+" project wide search 
+if executable('rg')
+  nmap <leader>/ :Rg<CR>
+elseif executable('ag')
+  nmap <leader>/ :Ag<CR>
+endif
+
+" show vim buffers
+nmap <leader>bb :Buffers<CR>
+" End fzf section
