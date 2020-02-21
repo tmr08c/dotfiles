@@ -51,7 +51,12 @@ endif
 
 set number relativenumber
 
+" ==========================
 " Leader key settings
+" ==========================
+
+" f(ile)
+nmap <leader>fs :write<CR>
 
 " v(im)
 
@@ -59,7 +64,10 @@ set number relativenumber
 nmap <leader>vtl :call LightMode()<CR>
 nmap <leader>vtd :call DarkMode()<CR>
 
-" r(eload)
+" e(dit) config
+nmap <leader>ve :vsplit $MYVIMRC<CR>
+
+" r(eload) config
 nmap <leader>vr :source $MYVIMRC<CR>
 
 " end v(im) section
