@@ -17,6 +17,11 @@ call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'tpope/vim-sensible'
 
+
+" fzf is used for file-finding and various other fuzzy finding windows
+Plug 'junegunn/fzf', { 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+
 " =================
 " </General>
 " =================
