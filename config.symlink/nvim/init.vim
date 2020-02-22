@@ -97,4 +97,7 @@ endif
 
 " show vim buffers
 nmap <leader>bb :Buffers<CR>
+nmap <leader>bd :bdelete<CR>
+nmap <leader>bn :bnext<CR>
+nmap <leader>bp :bprevious<CR>
 " End fzf section
