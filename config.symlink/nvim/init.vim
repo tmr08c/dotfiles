@@ -34,11 +34,19 @@ set termguicolors
 function! LightMode()
   set background=light
   colorscheme Tomorrow
+  
+  " lightline
+  let g:lightline.colorscheme = 'Tomorrow'
+  :call ReloadLightLine()
 endfunction
 
 function! DarkMode()
   set background=dark
   colorscheme Tomorrow-Night-Eighties
+
+  " lightline
+  let g:lightline.colorscheme = 'Tomorrow_Night_Eighties'
+  :call ReloadLightLine()
 endfunction
 
 " Default color mode based on system settings
@@ -60,15 +68,16 @@ nmap <leader>fs :write<CR>
 
 " v(im)
 
-" t(theme)
-nmap <leader>vtl :call LightMode()<CR>
-nmap <leader>vtd :call DarkMode()<CR>
-
 " e(dit) config
 nmap <leader>ve :vsplit $MYVIMRC<CR>
 
 " r(eload) config
 nmap <leader>vr :source $MYVIMRC<CR>
+
+
+" t(theme)
+nmap <leader>vtl :call LightMode()<CR>
+nmap <leader>vtd :call DarkMode()<CR>
 
 " end v(im) section
 
@@ -88,4 +97,7 @@ endif
 
 " show vim buffers
 nmap <leader>bb :Buffers<CR>
+nmap <leader>bd :bdelete<CR>
+nmap <leader>bn :bnext<CR>
+nmap <leader>bp :bprevious<CR>
 " End fzf section
