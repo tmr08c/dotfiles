@@ -1,0 +1,15 @@
+{
+  // solargraph (ruby)
+  "solargraph.completion": true,
+  "solargraph.hover": true,
+  "solargraph.definitions": true,
+  "solargraph.diagnostics": true,
+  "solargraph.rename": true,
+  "solargraph.references": true,
+  "solargraph.formatting": true,
+  "solargraph.autoformat": false,
+  "solargraph.useBundler": true,
+  "solargraph.checkGemVersion": true,
+  "solargraph.promptDownload": true,
+  }
+}
