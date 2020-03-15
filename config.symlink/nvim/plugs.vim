@@ -137,10 +137,10 @@ Plug 'tpope/vim-rails', { 'for': 'ruby' }
 " testing
 Plug 'janko/vim-test', { 'on': ['TestNearest', 'TestFile', 'TestSuite', 'TestLast', 'TestVisit'] }
 
-let test#strategy = "neomake"
+let test#strategy = "neovim"
 nmap <leader>tt :TestNearest<CR>
 " run a single test and get full output in terminal 
-nmap <leader>tT :TestNearest -strategy=neovim<CR>
+nmap <leader>tT :TestNearest<CR>
 nmap <leader>tf :TestFile<CR>
 nmap <leader>ta :TestSuite<CR>
 nmap <leader>tl :TestLast<CR>
