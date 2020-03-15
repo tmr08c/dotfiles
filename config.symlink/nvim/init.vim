@@ -113,10 +113,14 @@ nmap <leader>vtd :call DarkMode()<CR>
 " Working with fzf
 " ==========================
 
-" files in current project
-nmap <leader>pf :Files<CR>
+" files in current "project" (based on git)
+nmap <leader>pf :GitFiles<CR>
+" all files in current path
+nmap <leader>pF :Files<CR>
+" files from home directory
+nmap <leader>ff :Files ~/<CR>
 
-" project wide search 
+" project wide search
 if executable('rg')
   nmap <leader>/ :Rg<CR>
 elseif executable('ag')
