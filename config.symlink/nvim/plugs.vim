@@ -22,6 +22,8 @@ Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 
+" highlight (and have the ability to remove) trailing whitespace
+Plug 'ntpeters/vim-better-whitespace'
 
 " working with make and quickfix
 " dispatch helps neomake know what compiler to use for vim-test
@@ -32,7 +34,7 @@ Plug 'neomake/neomake'
 " https://github.com/neomake/neomake/issues/2459
 let g:neomake_postprocess = 'neomake#postprocess#compress_whitespace'
 
-" listen for hooks 
+" listen for hooks
 augroup neomake_hook
   au!
   autocmd User NeomakeJobFinished call TestFinished()
