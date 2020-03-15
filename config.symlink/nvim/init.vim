@@ -133,3 +133,12 @@ nmap <leader>bd :bdelete<CR>
 nmap <leader>bn :bnext<CR>
 nmap <leader>bp :bprevious<CR>
 " End fzf section
+
+" ==========================
+" Config for file types
+" ==========================
+
+" json
+
+" json comment highlighting
+autocmd FileType json syntax match Comment +\/\/.\+$+
