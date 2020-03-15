@@ -119,6 +119,9 @@ endfunction
 " <Programming>
 " =================
 
+" git
+Plug 'ruanyl/vim-gh-line'
+
 " all language plugins
 "
 " this allows syntax higlighting for files as-needed 
