@@ -1,0 +1,10 @@
+# https://github.com/asdf-vm/asdf-ruby#default-gems
+bundler
+
+# neovim
+neovim
+
+# work with LSP
+solargraph
+
+lolcommits
