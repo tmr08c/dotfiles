@@ -20,6 +20,25 @@ set shiftwidth=2
 set shiftround
 set nojoinspaces
 
+" Search
+
+" default to being case insensitive
+set ignorecase
+" worry about case when including a capital letter
+set smartcase
+
+" Splits/Windows
+
+" make it easier to move between splits/windows
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" it seems that it's more natural to expect splits to open in this way
+set splitbelow
+set splitright
+
 " Style
 
 syntax on
@@ -34,7 +53,7 @@ set termguicolors
 function! LightMode()
   set background=light
   colorscheme Tomorrow
-  
+
   " lightline
   let g:lightline.colorscheme = 'Tomorrow'
   :call ReloadLightLine()
@@ -59,6 +78,12 @@ endif
 
 set number relativenumber
 
+" Terminal
+
+" let escape take us into normal mode
+:tnoremap <Esc> <C-\><C-n>
+
+
 " ==========================
 " Leader key settings
 " ==========================
@@ -74,6 +99,9 @@ nmap <leader>ve :vsplit $MYVIMRC<CR>
 " r(eload) config
 nmap <leader>vr :source $MYVIMRC<CR>
 
+" s(earch)
+" (c) clear
+nmap <leader>sc :nohl<CR>
 
 " t(theme)
 nmap <leader>vtl :call LightMode()<CR>
