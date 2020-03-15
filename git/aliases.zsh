@@ -14,6 +14,8 @@ alias gp='git push origin HEAD'
 # Remove `+` and `-` from start of diff lines; just rely upon color.
 alias gd='git diff --color | sed "s/^\([^-+ ]*\)[-+ ]/\\1/" | less -r'
 alias gds='git diff --color --staged | sed "s/^\([^-+ ]*\)[-+ ]/\\1/" | less -r'
+# diff origin/upstream
+alias gdo='git diff @{upstream}'
 
 alias gc='git commit'
 alias gca='git commit -a'
