@@ -52,7 +52,6 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f "$(brew --prefix asdf)/asdf.sh" ] && source $(brew --prefix asdf)/asdf.sh
 
 # Kitty and light/dark mode
 if [[ $TERM =~ 'kitty' ]];then 
