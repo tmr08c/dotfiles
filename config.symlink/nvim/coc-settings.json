@@ -10,6 +10,5 @@
   "solargraph.autoformat": false,
   "solargraph.useBundler": true,
   "solargraph.checkGemVersion": true,
-  "solargraph.promptDownload": true,
-  }
+  "solargraph.promptDownload": true
 }
