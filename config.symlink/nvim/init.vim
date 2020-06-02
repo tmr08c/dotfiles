@@ -1,5 +1,8 @@
 set nocompatible " be iMproved, required
 
+" Leader key needs to be set early, so we can use it later
+let mapleader="\<SPACE>"
+
 " Plugins
 "Load Vundle config
 if filereadable(expand("~/.config/nvim/plugs.vim"))
@@ -9,7 +12,6 @@ endif
 " General
 "
 " Customize keybindings
-let mapleader="\<SPACE>"
 
 " Generally configure tabs to 2, and convert to spaces
 set tabstop=2
