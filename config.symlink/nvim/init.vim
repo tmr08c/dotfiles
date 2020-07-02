@@ -116,8 +116,7 @@ nmap <leader>vtd :call DarkMode()<CR>
 " ==========================
 
 " files in current "project" (based on git)
-nmap <leader>pf :GitFiles<CR>
-" all files in current path
+nmap <leader>pf :FzfPreviewProjectFiles<CR>
 nmap <leader>pF :Files<CR>
 " files from home directory
 nmap <leader>ff :Files ~/<CR>
@@ -130,7 +129,8 @@ elseif executable('ag')
 endif
 
 " show vim buffers
-nmap <leader>bb :Buffers<CR>
+nmap <leader>bb :FzfPreviewBuffers<CR>
+nmap <leader>bB :FzfPreviewAllBuffers<CR>
 nmap <leader>bd :bdelete<CR>
 nmap <leader>bn :bnext<CR>
 nmap <leader>bp :bprevious<CR>
