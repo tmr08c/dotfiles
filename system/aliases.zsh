@@ -1,10 +1,11 @@
 # exa overides for ls
 if $(exa &>/dev/null)
 then
-  alias ls="exa -F"
-  alias l="exa -l"
+  alias l="exa"
+  alias ls="exa"
   alias ll="exa -la"
   alias la="exa -a"
+  alias tree="exa --tree"
 fi
 
 # `bat` override for `cat`
