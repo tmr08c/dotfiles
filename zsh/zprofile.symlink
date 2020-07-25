@@ -1,4 +1,4 @@
 # set up asdf stuff. This needs to be in `zshenv` to be usef in all
 # environments, including [spawned solargraph
 # processes](https://github.com/neoclide/coc-solargraph/issues/12)
-[ -f "$(brew --prefix asdf)/asdf.sh" ] && source $(brew --prefix asdf)/asdf.sh
+[ -f "/usr/local/opt/asdf/asdf.sh" ] && source /usr/local/opt/asdf/asdf.sh
