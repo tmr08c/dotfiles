@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+light-mode() {
+  if [[ $TERM =~ 'kitty' ]];then
+    kitty @ set-colors --all --configured ~/.config/kitty/kitty-themes/themes/Tomorrow.conf
+  fi
+
+  export BAT_THEME="ansi-light"
+  export FZF_PREVIEW_PREVIEW_BAT_THEME="ansi-light"
+
+  osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to false'
+}

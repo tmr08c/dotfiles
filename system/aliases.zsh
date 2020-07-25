@@ -7,10 +7,9 @@ then
   alias la="exa -a"
 fi
 
-# `cat`
+# `bat` override for `cat`
 if $(type bat &>/dev/null)
 then
-  # alias cat="bat""OneHalfLight"
-  alias cat="bat --theme=\$(darkMode =~ 'dark' && echo default || echo ansi-light)"
-
+  # BAT_THEME is set in light and dark mode functions
+  alias cat="bat"
 fi

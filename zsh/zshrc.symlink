@@ -53,11 +53,9 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Kitty and light/dark mode
-if [[ $TERM =~ 'kitty' ]];then 
-  if [[ ! ( $(darkMode) =~ 'Dark' ) ]]; then
-    light-mode-kitty
-  else
-    dark-mode-kitty
-  fi
+# Run light/dark mode script based on current OS theme
+if [[ ! ( $(darkMode) =~ 'Dark' ) ]]; then
+  light-mode
+else
+  dark-mode
 fi
