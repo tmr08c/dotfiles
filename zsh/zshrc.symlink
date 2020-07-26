@@ -1,8 +1,10 @@
+zmodload zsh/zprof
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
 # your project folder that we can `c [tab]` to
-export PROJECTS=~/Code
+export PROJECTS=~/code
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
@@ -30,7 +32,12 @@ done
 
 # initialize autocomplete here, otherwise functions won't be loaded
 autoload -U compinit
-compinit
+# compinit
+if [ $(date +'%j') != $(/usr/bin/stat -f '%Sm' -t '%j' ${ZDOTDIR:-$HOME}/.zcompdump) ]; then
+  compinit
+else
+  compinit -C
+fi
 
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
@@ -53,11 +60,9 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Kitty and light/dark mode
-if [[ $TERM =~ 'kitty' ]];then 
-  if [[ ! ( $(darkMode) =~ 'Dark' ) ]]; then
-    light-mode-kitty
-  else
-    dark-mode-kitty
-  fi
+# Run light/dark mode script based on current OS theme
+if [[ ! ( $(darkMode) =~ 'Dark' ) ]]; then
+  light-mode
+else
+  dark-mode
 fi

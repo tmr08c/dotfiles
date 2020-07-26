@@ -1,0 +1,16 @@
+#!/bin/zsh
+#
+# Switch color themes.
+#
+# Uses `light-mode` and `dark-mode` functions
+#
+switch-theme() {
+  local CURRENT=`darkMode`
+
+  if [ $CURRENT = Dark ]
+  then
+    light-mode
+  else
+    dark-mode
+  fi
+}

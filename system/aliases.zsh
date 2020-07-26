@@ -1,10 +1,16 @@
-# grc overides for ls
-#   Made possible through contributions from generous benefactors like
-#   `brew install coreutils`
-if $(gls &>/dev/null)
+# exa overides for ls
+if $(exa &>/dev/null)
 then
-  alias ls="gls -F --color"
-  alias l="gls -lAh --color"
-  alias ll="gls -l --color"
-  alias la='gls -A --color'
+  alias l="exa"
+  alias ls="exa"
+  alias ll="exa -la"
+  alias la="exa -a"
+  alias tree="exa --tree"
+fi
+
+# `bat` override for `cat`
+if $(type bat &>/dev/null)
+then
+  # BAT_THEME is set in light and dark mode functions
+  alias cat="bat"
 fi

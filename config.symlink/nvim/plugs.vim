@@ -21,6 +21,8 @@ Plug 'tpope/vim-surround'
 " fzf is used for file-finding and various other fuzzy finding windows
 Plug 'junegunn/fzf', { 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+" use floating window
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
 " highlight (and have the ability to remove) trailing whitespace
 Plug 'ntpeters/vim-better-whitespace'
@@ -125,6 +127,7 @@ endfunction
 
 " git
 Plug 'ruanyl/vim-gh-line'
+Plug 'lambdalisue/gina.vim'
 
 " all language plugins
 "

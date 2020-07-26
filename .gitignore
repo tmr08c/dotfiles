@@ -6,3 +6,5 @@ tmux.symlink/resurrect
 
 # vim
 config.symlink/nvim/.netrwhist
+
+node_modules
