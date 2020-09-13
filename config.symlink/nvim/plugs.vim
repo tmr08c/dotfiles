@@ -159,7 +159,7 @@ nmap <leader>tv :TestVisit<CR>
 
 " Intellisense
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = ['coc-solargraph', 'coc-tsserver', 'coc-json', 'coc-html', 'coc-css', 'coc-markdownlint', 'coc-spell-checker', 'coc-yaml']
+let g:coc_global_extensions = ['coc-solargraph', 'coc-tsserver', 'coc-json', 'coc-html', 'coc-css', 'coc-markdownlint', 'coc-spell-checker', 'coc-yaml', 'coc-elixir']
 
 " Coc Config
 " For getting set up, this is copy/pasted from README
