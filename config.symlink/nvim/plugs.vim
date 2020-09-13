@@ -125,6 +125,9 @@ endfunction
 " <Programming>
 " =================
 
+" general
+Plug 'tpope/vim-commentary'
+
 " git
 Plug 'ruanyl/vim-gh-line'
 Plug 'lambdalisue/gina.vim'
