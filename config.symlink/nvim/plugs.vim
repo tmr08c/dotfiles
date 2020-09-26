@@ -27,6 +27,13 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 " highlight (and have the ability to remove) trailing whitespace
 Plug 'ntpeters/vim-better-whitespace'
 
+" default to stripping whitespace on save
+let g:strip_whitespace_on_save = 1
+" only strip lines we've modified
+let g:strip_only_modified_lines = 1
+" don't prompt to confirm when stripping
+let g:strip_whitespace_confirm = 0
+
 " working with make and quickfix
 " dispatch helps neomake know what compiler to use for vim-test
 Plug 'tpope/vim-dispatch'
