@@ -115,6 +115,8 @@ nmap <leader>vtd :call DarkMode()<CR>
 " Working with fzf
 " ==========================
 
+nmap <leader><leader> :<C-u>Commands<CR>
+
 " files in current "project" (based on git)
 nmap <leader>pf :<C-u>GFiles<CR>
 nmap <leader>pF :<C-u>Files<CR>
