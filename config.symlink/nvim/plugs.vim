@@ -143,6 +143,8 @@ Plug 'lambdalisue/gina.vim'
 " languages that are most commonly worked with
 Plug 'sheerun/vim-polyglot'
 
+Plug 'tpope/vim-commentary'
+
 " ruby
 Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
 Plug 'tpope/vim-rake', { 'for': 'ruby' } " like vim-rails, for non rails projects
