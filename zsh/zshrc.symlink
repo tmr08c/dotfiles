@@ -66,3 +66,8 @@ if [[ ! ( $(darkMode) =~ 'Dark' ) ]]; then
 else
   dark-mode
 fi
+
+# Add direnv hook to load `.envrc` files
+eval "$(direnv hook zsh)"
+# A shortcut to access the asdf-managed version of `direnv`
+direnv() { asdf exec direnv "$@"; }
