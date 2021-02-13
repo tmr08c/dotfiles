@@ -55,19 +55,11 @@ set termguicolors
 function! LightMode()
   set background=light
   colorscheme Tomorrow
-
-  " lightline
-  let g:lightline.colorscheme = 'Tomorrow'
-  :call ReloadLightLine()
 endfunction
 
 function! DarkMode()
   set background=dark
   colorscheme Tomorrow-Night-Eighties
-
-  " lightline
-  let g:lightline.colorscheme = 'Tomorrow_Night_Eighties'
-  :call ReloadLightLine()
 endfunction
 
 " Default color mode based on system settings
