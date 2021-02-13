@@ -1,4 +1,6 @@
 {
+  // general
+  "coc.preferences.formatOnSaveFiletypes": ["elixir"],
   // solargraph (ruby)
   "solargraph.completion": true,
   "solargraph.hover": true,
