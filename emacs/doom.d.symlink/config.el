@@ -27,9 +27,64 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
 
+;; org
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Dropbox/Notes/org/")
+
+
+(defvar tr/org-templates-directory (concat org-directory "templates/") "Directory for storing org-mode template")
+
+;; DOOM defines some capture templates, add to the list
+;; https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489993881
+(after! org
+  (add-to-list 'org-capture-templates
+             `("l" "TIL" entry
+               (file ,(concat org-directory "til.org"))
+               "* %t\nSomething")))
+
+
+;; org-roam
+(setq org-roam-directory (concat org-directory  "roam/")
+      org-roam-dailies-capture-templates
+      (let ((head (with-temp-buffer
+                    (insert-file-contents (concat tr/org-templates-directory "daily.org"))
+                    (buffer-string))))
+            `(("d" "default" entry
+               #'org-roam-capture--get-point
+               "* %?"
+               :file-name "daily/%<%Y-%m-%d>"
+               :head ,head)
+              ("t" "todo" item
+               #'org-roam--capture-get-point
+               "[ ]"
+               :file-name "daily/%<%Y-%m-%d>"
+               :head ,head
+               :olp ("Planning")))))
+;; (setq org-roam-dailies-capture-templates
+;;           (let ((head "#+title: %<%Y-%m-%d (%A)>\n#+startup: showall\n* [/] Do Today\n* [/] Maybe Do Today\n* Journal\n"))
+;;             `(("j" "journal" entry
+;;                #'org-roam-capture--get-point
+;;                "* %<%H:%M> %?"
+;;                :file-name "daily/%<%Y-%m-%d>"
+;;                :head ,head
+;;                :olp ("Journal"))
+;;               ("t" "do today" item
+;;                #'org-roam-capture--get-point
+;;                "[ ] %(princ as/agenda-captured-link)"
+;;                :file-name "daily/%<%Y-%m-%d>"
+;;                :head ,head
+;;                :olp ("Do Today")
+;;                :immediate-finish t)
+;;               ("m" "maybe do today" item
+;;                #'org-roam-capture--get-point
+;;                "[ ] %(princ as/agenda-captured-link)"
+;;                :file-name "daily/%<%Y-%m-%d>"
+;;                :head ,head
+;;                :olp ("Maybe Do Today")
+;;                :immediate-finish t))))
+
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -52,3 +107,8 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+
+;; projectile
+(setq
+ projectile-project-search-path '("~/code/"))
