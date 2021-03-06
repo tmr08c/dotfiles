@@ -96,32 +96,6 @@ endfunction
 " load a bunch of colorschems to choose from
 Plug 'flazz/vim-colorschemes'
 
-Plug 'itchyny/lightline.vim'
-let g:lightline = {
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'teststatus', 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'teststatus': 'TestStatus',
-      \   'cocstatus': 'coc#status'
-      \ },
-      \ }
-
-" Use auocmd to force lightline update (for coc change).
-autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
-
-" There's no built-in way to reload to allow for colorscheme changes
-" This function can be called to reload lightline and is used a part of my
-" light and dark mode functions
-"
-" From https://github.com/itchyny/lightline.vim/pull/259
-function! ReloadLightLine()
-  :call lightline#init()
-  :call lightline#colorscheme()
-  :call lightline#update()
-endfunction
-
 " =================
 " </Style>
 " =================
