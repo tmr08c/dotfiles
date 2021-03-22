@@ -108,7 +108,10 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-
 ;; projectile
 (setq
  projectile-project-search-path '("~/code/"))
+
+;; rust
+(after! rustic
+  (setq rustic-lsp-server 'rls))
