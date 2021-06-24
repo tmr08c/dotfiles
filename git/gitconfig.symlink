@@ -30,3 +30,5 @@
 	helper = osxkeychain
 [commit]
 	verbose = true
+[pull]
+	rebase = false
