@@ -113,6 +113,10 @@
 (setq
  projectile-project-search-path '("~/code/"))
 
+;; ruby
+(setq
+ rspec-use-spring-when-possible t)
+
 ;; rust
 (after! rustic
   (setq rustic-lsp-server 'rls))
