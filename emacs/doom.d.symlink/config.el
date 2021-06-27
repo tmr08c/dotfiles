@@ -55,7 +55,8 @@
                #'org-roam-capture--get-point
                "* %?"
                :file-name "daily/%<%Y-%m-%d>"
-               :head ,head)
+               :head ,head
+               :olp ("Journal" "Reflection" "How was yesterday?"))
               ("t" "todo" item
                #'org-roam--capture-get-point
                "[ ]"
