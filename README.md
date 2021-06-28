@@ -19,7 +19,9 @@ If I still with it, this should probably be added to the setup scripts.
 
 While testing fish, I will be also testing [oh-my-fish](https://github.com/oh-my-fish/oh-my-fish). It looks like switching to fish will require some changes from assumptions in this repo, and I may want to use [someone else's dotifles](https://github.com/sagebind/dotfiles/blob/master/install.fish) for inspiration.
 
-## emacs / spacemacs
+## (DOOM) Emacs 
+
+This repo includes a submoodule that points to DOOM Emacs and a symlink to the `.doom` folder. While this should get Doom Emacs mostly running, it seems like it's still best to run `doom install`. It is safe to re-run and will install pieces that won't be installed with `doom sync`.
 
 ### Github layer
 
