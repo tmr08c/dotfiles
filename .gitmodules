@@ -6,10 +6,11 @@
 	url = https://github.com/tmux-plugins/tpm
 [submodule "config.symlink/kitty/kitty-themes"]
 	path = config.symlink/kitty/kitty-themes
-	url = git@github.com:dexpota/kitty-themes.git
+	url = https://github.com/dexpota/kitty-themes.git
 [submodule "emacs/emacs.d.symlink"]
 	path = emacs/emacs.d.symlink
 	url = https://github.com/hlissner/doom-emacs.git
 [submodule "elixir/elixir-ls"]
 	path = elixir/elixir-ls
 	url = https://github.com/elixir-lsp/elixir-ls.git
+
