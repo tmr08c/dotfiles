@@ -1,7 +1,4 @@
-tap 'azure/functions'
 tap 'd12frosted/emacs-plus'
-tap 'gigalixir/brew'
-tap 'heroku/brew'
 tap 'homebrew/bundle'
 tap 'homebrew/cask'
 tap 'homebrew/cask-drivers'
