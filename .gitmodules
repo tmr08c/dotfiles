@@ -12,4 +12,4 @@
 	url = https://github.com/hlissner/doom-emacs.git
 [submodule "elixir/elixir-ls"]
 	path = elixir/elixir-ls
-	url = git@github.com:elixir-lsp/elixir-ls.git
+	url = https://github.com/elixir-lsp/elixir-ls.git
