@@ -8,3 +8,6 @@ neovim
 solargraph
 
 lolcommits
+
+# Used with VS Code Extension to format Elixir templates
+htmlbeautifier
