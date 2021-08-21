@@ -27,6 +27,11 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
 
+;; UI
+
+;; Default to word-wrapping everywhere
+(global-visual-line-mode t)
+
 ;; org
 
 ;; If you use `org' and don't want your org files in the default location below,
