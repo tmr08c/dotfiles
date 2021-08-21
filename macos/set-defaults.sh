@@ -78,5 +78,8 @@ defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.Web
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Change screenshot directory
-mkdir ~/Pictures/ScreenShots/
+mkdir -p ~/Pictures/ScreenShots/
 defaults write com.apple.screencapture location ~/Pictures/ScreenShots/;killall SystemUIServer
+
+# Create `code` directory - this is default place for cloning code
+mkdir -p ~/code
