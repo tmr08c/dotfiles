@@ -125,3 +125,7 @@
 ;; rust
 (after! rustic
   (setq rustic-lsp-server 'rls))
+
+;; formatting
+(setq +format-on-save-enabled-modes
+      '(not mhtml-mode)) ; doesn't work well with partials
