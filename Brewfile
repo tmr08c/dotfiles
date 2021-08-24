@@ -62,7 +62,7 @@ brew "wrk"
 brew "yamllint"
 brew "youtube-dl"
 brew "zlib"
-brew "d12frosted/emacs-plus/emacs-plus@27", args: ["with-cacodemon-icon"]
+brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-cacodemon-icon", "with-native-comp"]
 cask "alfred"
 cask "caffeine"
 cask "camo-studio"
