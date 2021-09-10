@@ -114,6 +114,31 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+;; programming
+
+;; polymode
+
+;; Set up polymode to support web-mode in LiveView `render` functions
+;; https://blog.evalcode.com/phoenix-liveview-inline-syntax-highlighting-for-emacs/
+(use-package! polymode
+  :mode ("\.ex$" . poly-elixir-web-mode)
+  :config
+  (define-hostmode poly-elixir-hostmode :mode 'elixir-mode)
+  (define-innermode poly-liveview-expr-elixir-innermode
+    :mode 'web-mode
+    :head-matcher (rx line-start (* space) "~L" (= 3 (char "\"'")) line-end)
+    :tail-matcher (rx line-start (* space) (= 3 (char "\"'")) line-end)
+    :head-mode 'host
+    :tail-mode 'host
+    :allow-nested nil
+    :keep-in-mode 'host
+    :fallback-mode 'host)
+  (define-polymode poly-elixir-web-mode
+    :hostmode 'poly-elixir-hostmode
+    :innermodes '(poly-liveview-expr-elixir-innermode))
+  )
+(setq web-mode-engines-alist '(("elixir" . "\\.ex\\'")))
+
 ;; projectile
 (setq
  projectile-project-search-path '("~/code/"))
