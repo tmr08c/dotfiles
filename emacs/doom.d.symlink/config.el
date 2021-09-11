@@ -116,6 +116,27 @@
 
 ;; programming
 
+;; lsp
+(after! lsp-mode
+  ;; Using LSP for smarter folding with lsp-origami
+  ;; https://blog.evalcode.com/enable-elixir-code-folding-in-doom-emacs/
+
+  ;; Add origami and LSP integration
+  (use-package! lsp-origami)
+  (add-hook! 'lsp-after-open-hook #'lsp-origami-try-enable)
+
+  ;; Enable folding
+  (setq lsp-enable-folding t)
+
+  ;; Ignore certain directories to limit file watchers
+  (dolist (match
+           '("[/\\\\].elixir_ls"
+             "[/\\\\]node_modules$"
+             "[/\\\\]deps"
+             "[/\\\\]build"
+             "[/\\\\]_build"))
+    (add-to-list 'lsp-file-watch-ignored-directories match)))
+
 ;; polymode
 
 ;; Set up polymode to support web-mode in LiveView `render` functions
