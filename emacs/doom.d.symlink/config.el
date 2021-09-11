@@ -163,6 +163,15 @@
 (setq
  projectile-project-search-path '("~/code/"))
 
+;; web-mode
+(after! web-mode
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+
+        ;; Highlight the current element
+        web-mode-enable-current-element-highlight t))
+
 ;; ruby
 (setq
  rspec-use-spring-when-possible t)
