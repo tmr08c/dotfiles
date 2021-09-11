@@ -142,7 +142,8 @@
 ;; Set up polymode to support web-mode in LiveView `render` functions
 ;; https://blog.evalcode.com/phoenix-liveview-inline-syntax-highlighting-for-emacs/
 (use-package! polymode
-  :mode ("\.ex$" . poly-elixir-web-mode)
+  :mode ("\\.ex\\'" . poly-elixir-web-mode)
+  :init (setq! web-mode-engines-alist '(("elixir" . "\\.ex\\'")))
   :config
   (define-hostmode poly-elixir-hostmode :mode 'elixir-mode)
   (define-innermode poly-liveview-expr-elixir-innermode
@@ -156,9 +157,7 @@
     :fallback-mode 'host)
   (define-polymode poly-elixir-web-mode
     :hostmode 'poly-elixir-hostmode
-    :innermodes '(poly-liveview-expr-elixir-innermode))
-  )
-(setq web-mode-engines-alist '(("elixir" . "\\.ex\\'")))
+    :innermodes '(poly-liveview-expr-elixir-innermode)))
 
 ;; projectile
 (setq
