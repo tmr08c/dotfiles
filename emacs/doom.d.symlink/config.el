@@ -148,7 +148,7 @@
   (define-hostmode poly-elixir-hostmode :mode 'elixir-mode)
   (define-innermode poly-liveview-expr-elixir-innermode
     :mode 'web-mode
-    :head-matcher (rx line-start (* space) "~L" (= 3 (char "\"'")) line-end)
+    :head-matcher (rx line-start (* space) (or "~L" "~H") (= 3 (char "\"'")) line-end)
     :tail-matcher (rx line-start (* space) (= 3 (char "\"'")) line-end)
     :head-mode 'host
     :tail-mode 'host
