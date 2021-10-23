@@ -34,3 +34,5 @@
 	rebase = false
 [init]
 	defaultBranch = main
+[github]
+	user = tmr08c
