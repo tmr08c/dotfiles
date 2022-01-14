@@ -206,6 +206,22 @@ Auto-formatting is enabled via =(format +onsave)= in =init.el=. There are some m
 (setq +format-on-save-enabled-modes
       '(not mhtml-mode)) ; doesn't work well with partials
 #+end_src
+*** SQL
+**** Connecting to common databases
+
+[[https://emacsredux.com/blog/2013/06/13/using-emacs-as-a-database-client/][Source]]
+
+Create a list of common databases that I connect to. Running the command =sql-connect= will display this list and allow for me to use the configuration to quickly connect to a given database.
+
+#+begin_src elisp
+(setq sql-connection-alist
+      '((do-dev (sql-product 'postgres)
+                (sql-port 5432)
+                (sql-server "localhost")
+                (sql-user "postgres")
+                (sql-password "")
+                (sql-database "dynamic_optimization_dev"))))
+#+end_src
 
 ** Languages
 
