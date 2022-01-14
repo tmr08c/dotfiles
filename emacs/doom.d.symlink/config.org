@@ -1,0 +1,330 @@
+* Introduction
+
+Emacs config for @tmr08c.
+
+** DOOM
+
+I am using [[https://github.com/hlissner/doom-emacs][DOOM]]. This means a lot of the heavy lifting is done by DOOM and through the module enabled in [[file:init.el][init.el]].
+
+*** Notes
+
+Here are some additional functions/macros that could help you configure Doom:
+
+- `load!' for loading external *.el files relative to this one
+- `use-package!' for configuring packages
+- `after!' for running code after a package has loaded
+- `add-load-path!' for adding directories to the `load-path', relative to
+  this file. Emacs searches the `load-path' when you load packages with
+  `require' or `use-package'.
+- `map!' for binding new keys
+
+To get information about any of these functions/macros, move the cursor over
+the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+This will open documentation for it, including demos of how they are used.
+
+You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+they are implemented.
+
+* Identification
+
+Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets.
+
+#+begin_src elisp
+(setq user-full-name "Troy Rosenberg"
+      user-mail-address "tmr08c@gmail.com")
+#+end_src
+
+* UI
+** Font
+
+Doom exposes five (optional) variables for controlling fonts in Doom. Here
+are the three important ones:
+
+- `doom-font'
+- `doom-variable-pitch-font'
+- `doom-big-font' -- used for `doom-big-font-mode'; use this for
+  presentations or streaming.
+
+They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+font string. You generally only need these two:
+
+#+begin_src elisp
+(setq doom-font (font-spec :family "JetBrains Mono" :size 13.0)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
+#+end_src
+
+** Theme
+
+Set default theme
+
+#+begin_src elisp
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-one)
+#+end_src
+
+Leverage [[https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-change][hook]] provided by =emacs-plus= for macOS's light/dark mode theme change.
+
+#+begin_src elisp
+(defun tr/apply-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme 'doom-one-light t))
+    ('dark (load-theme 'doom-one t))))
+
+(add-hook 'ns-system-appearance-change-functions #'tr/apply-theme)
+#+end_src
+
+** Lines
+
+Default to using relative line numbers
+
+#+begin_src elisp
+(setq display-line-numbers-type 'relative)
+#+end_src
+
+Default to word-wrapping everywhere
+
+#+begin_src elisp
+(setq global-visual-line-mode t)
+#+end_src
+
+* Applications
+** org-mode
+*** Basic Set up
+
+Set base directory for =org= files.
+
+#+begin_src elisp
+(setq org-directory "~/Dropbox/Notes/org/")
+#+end_src
+
+*** Templates
+
+Having template files can be a bit easier to manager than creating the templates in-line as a part of configuration. We define a variable to point to our templates sub-directory, so we can reference it later.
+
+#+begin_src elisp
+(defvar tr/org-templates-directory (concat org-directory "templates/"))
+#+end_src
+
+Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489993881][existing capture templates from DOOM]].
+
+#+begin_src elisp
+(after! org
+  (add-to-list 'org-capture-templates
+             `("l" "TIL" entry
+               (file ,(concat org-directory "til.org"))
+               "* %t\nSomething")))
+#+end_src
+
+*** org-roam
+
+Put org-roam files in a sub-directory with our other org files.
+
+#+begin_src elisp
+(setq org-roam-directory (concat org-directory  "roam/"))
+#+end_src
+
+**** Dailies
+
+Configure org roam dailies to use our own template for daily files. We also add some additional quick capture commands.
+
+#+begin_src elisp
+(setq org-roam-dailies-capture-templates
+      (let ((head (with-temp-buffer
+                    (insert-file-contents (concat tr/org-templates-directory "daily.org"))
+                    (buffer-string))))
+            `(("d" "default" entry
+               #'org-roam-capture--get-point
+               "* %?"
+               :file-name "daily/%<%Y-%m-%d>"
+               :head ,head)
+              ("t" "todo" item
+               #'org-roam--capture-get-point
+               "[ ]"
+               :file-name "daily/%<%Y-%m-%d>"
+               :head ,head
+               :olp ("Planning")))))
+;; (setq org-roam-dailies-capture-templates
+;;           (let ((head "#+title: %<%Y-%m-%d (%A)>\n#+startup: showall\n* [/] Do Today\n* [/] Maybe Do Today\n* Journal\n"))
+;;             `(("j" "journal" entry
+;;                #'org-roam-capture--get-point
+;;                "* %<%H:%M> %?"
+;;                :file-name "daily/%<%Y-%m-%d>"
+;;                :head ,head
+;;                :olp ("Journal"))
+;;               ("t" "do today" item
+;;                #'org-roam-capture--get-point
+;;                "[ ] %(princ as/agenda-captured-link)"
+;;                :file-name "daily/%<%Y-%m-%d>"
+;;                :head ,head
+;;                :olp ("Do Today")
+;;                :immediate-finish t)
+;;               ("m" "maybe do today" item
+;;                #'org-roam-capture--get-point
+;;                "[ ] %(princ as/agenda-captured-link)"
+;;                :file-name "daily/%<%Y-%m-%d>"
+;;                :head ,head
+;;                :olp ("Maybe Do Today")
+;;                :immediate-finish t))))
+#+end_src
+
+* Programming
+** General
+*** LSP
+
+Set up LSP for smarter folding with lsp-origami. Config based on [[https://blog.evalcode.com/enable-elixir-code-folding-in-doom-emacs/][this post]].
+
+#+begin_src elisp
+(after! lsp-mode
+  ;; Add origami and LSP integration
+  (use-package! lsp-origami)
+  (add-hook! 'lsp-after-open-hook #'lsp-origami-try-enable)
+
+  ;; Enable folding
+  (setq lsp-enable-folding t)
+
+  ;; tailwind
+  (use-package! lsp-tailwindcss))
+#+end_src
+
+*** Projectile
+
+Tell Projectile to look into the =~/code= directory for adding new projects.
+
+#+begin_src elisp
+(setq projectile-project-search-path '("~/code/"))
+#+end_src
+
+*** Formatting
+
+Auto-formatting is enabled via =(format +onsave)= in =init.el=. There are some modes where this doesn't always work as well, so we can disable it.
+
+#+begin_src elisp
+(setq +format-on-save-enabled-modes
+      '(not mhtml-mode)) ; doesn't work well with partials
+#+end_src
+*** SQL
+**** Connecting to common databases
+
+[[https://emacsredux.com/blog/2013/06/13/using-emacs-as-a-database-client/][Source]]
+
+Create a list of common databases that I connect to. Running the command =sql-connect= will display this list and allow for me to use the configuration to quickly connect to a given database.
+
+#+begin_src elisp
+(setq sql-connection-alist
+      '((do-dev (sql-product 'postgres)
+                (sql-port 5432)
+                (sql-server "localhost")
+                (sql-user "postgres")
+                (sql-password "")
+                (sql-database "dynamic_optimization_dev"))))
+#+end_src
+
+** Languages
+
+Configuration tied to specific languages or modes.
+
+*** Web
+
+#+begin_src elisp
+(after! web-mode
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+
+        ;; Highlight the current element
+        web-mode-enable-current-element-highlight t))
+#+end_src
+
+*** Elixir
+:PROPERTIES:
+:ID:       76baa866-cd2e-40b1-8b88-b0281b186658
+:END:
+
+;; (defun tr/flycheck-dialyxir-setup ()
+;;   (interactive)
+;;   (add-to-list 'flycheck-checkers 'elixir-dialyxir t))
+
+;; (use-package! flycheck-elixir-dialyxir
+;;   :after elixir-mode
+;;   :config (tr/flycheck-dialyxir-setup))
+
+;; (after! elixir-mode
+;;   (after! lsp-mode
+;;     (flycheck-add-next-checker 'lsp 'elixir-credo 'elixir-dialyxir)))
+
+;; ;; Add buffer local Flycheck checkers after LSP for different major modes.
+;; (defvar-local my-flycheck-local-cache nil)
+;; (defun my-flycheck-local-checker-get (fn checker property)
+;;   ;; Only check the buffer local cache for the LSP checker, otherwise we get
+;;   ;; infinite loops.
+;;   (if (eq checker 'lsp)
+;;       (or (alist-get property my-flycheck-local-cache)
+;;           (funcall fn checker property))
+;;     (funcall fn checker property)))
+;; (advice-add 'flycheck-checker-get
+;;             :around 'my-flycheck-local-checker-get)
+;; (add-hook 'lsp-managed-mode-hook
+;;           (lambda ()
+;;             (when (derived-mode-p 'haskell-mode)
+;;               (setq my-flycheck-local-cache '((next-checkers . (haskell-hlint)))))))
+;; (add-hook 'lsp-managed-mode-hook
+;;           (lambda ()
+;;             (when (derived-mode-p 'sh-mode)
+;;               (setq my-flycheck-local-cache '((next-checkers . (sh-shellcheck)))))))
+;; (add-hook 'lsp-managed-mode-hook
+;;           (lambda ()
+;;             (when (derived-mode-p 'tex-mode)
+;;               (setq my-flycheck-local-cache '((next-checkers . (tex-chktex)))))))
+
+
+You got =web-mode= in my =elixir-mode=! Leverage =polymode= to have web syntax highlighting for our LEEx and HEEx templates (when using sigils). Original implementation came from [[https://blog.evalcode.com/phoenix-liveview-inline-syntax-highlighting-for-emac][this post]].
+
+#+begin_src elisp
+(use-package! polymode
+  :mode ("\\.ex\\'" . poly-elixir-web-mode)
+  :init (setq! web-mode-engines-alist '(("elixir" . "\\.ex\\'")))
+  :config
+  (define-hostmode poly-elixir-hostmode :mode 'elixir-mode)
+  (define-innermode poly-liveview-expr-elixir-innermode
+    :mode 'web-mode
+    :head-matcher (rx line-start (* space) (or "~L" "~H") (= 3 (char "\"'")) line-end)
+    :tail-matcher (rx line-start (* space) (= 3 (char "\"'")) line-end)
+    :head-mode 'host
+    :tail-mode 'host
+    :allow-nested nil
+    :keep-in-mode 'host
+    :fallback-mode 'host)
+  (define-polymode poly-elixir-web-mode
+    :hostmode 'poly-elixir-hostmode
+    :innermodes '(poly-liveview-expr-elixir-innermode)))
+#+end_src
+
+LSP will try to look in all directories within out project. This is a lot of files and can slow things down. We can configure it to ignore some build/dependency directories common to our project.
+
+#+begin_src elisp
+(after! lsp-mode
+  (dolist (match
+           '("[/\\\\].elixir_ls"
+             "[/\\\\]node_modules$"
+             "[/\\\\]deps"
+             "[/\\\\]build"
+             "[/\\\\]_build"))
+    (add-to-list 'lsp-file-watch-ignored-directories match)))
+#+end_src
+
+*** Ruby
+
+#+begin_src elisp
+(setq rspec-use-spring-when-possible t)
+#+end_src
+
+*** Rust
+
+#+begin_src elisp
+(after! rustic (setq rustic-lsp-server 'rls))
+#+end_src
+
