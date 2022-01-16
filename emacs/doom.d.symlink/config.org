@@ -49,8 +49,8 @@ They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 font string. You generally only need these two:
 
 #+begin_src elisp
-(setq doom-font (font-spec :family "JetBrains Mono" :size 13.0)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 15))
+(setq doom-font (font-spec :family "Iosevka Fixed Slab" :size 13 :height 1.0)
+      doom-variable-pitch-font (font-spec :family "ETBembo" :style "RomanOSF" :height 1.3))
 #+end_src
 
 ** Theme
@@ -79,7 +79,7 @@ Leverage [[https://github.com/d12frosted/homebrew-emacs-plus#system-appearance-c
 
 ** Lines
 
-Default to using relative line numbers
+Default to using relative line numbers.
 
 #+begin_src elisp
 (setq display-line-numbers-type 'relative)
@@ -328,3 +328,29 @@ LSP will try to look in all directories within out project. This is a lot of fil
 (after! rustic (setq rustic-lsp-server 'rls))
 #+end_src
 
+* Writing
+
+Configuration related to writing prose.  This is more general than the [[*org-mode][org-mode]] section, but, since a lot of writing happens in ~org-mode~, you may want to check that section as well.
+
+We will default to use DOOM's ~zen~ module when writing.  I find that the larger and more centered text is a bit more ascetically pleasing.
+
+~zen~ mode also enables ~variable-pitch-mode~.  [[https://www.reddit.com/r/DoomEmacs/comments/l9jy0h/comment/gljibj9/?utm_source=share&utm_medium=web2x&context=3][This Reddit comment]] from ~@hlissner~ notes that ~variable-pitch-mode~ can have conflicts with other packages, namely ~solaire-mode~ and suggests instead using ~mixed-pitch-mode~
+
+#+begin_quote
+TL;DR Multiple face-remapping plugins = a bad time.
+
+The simple workaround is to use mixed-pitch-mode everywhere you used to use variable-pitch-mode (they are roughly equivalent. The only difference is mixed-pitch-mode tries not to affect regions of text that are logically better left in a fixed-pitch font, such as tables or code blocks). It uses the more flexible strategy of swapping only their :family and :height attributes, rather than the entire faces.
+#+end_quote
+
+Using ~mixed-pitchmode~ combined with setting the [[*Font][DOOM font variables]] seems to work for me.
+
+#+begin_src elisp
+(add-hook! 'text-mode-hook '+zen/toggle)
+#+end_src
+
+I find line numbers ruin the ascetic of ~zen~, so let's turn them off.
+
+#+begin_src elisp
+(remove-hook! 'text-mode-hook
+              #'display-line-numbers-mode)
+#+end_src
