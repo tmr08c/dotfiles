@@ -332,6 +332,8 @@ LSP will try to look in all directories within out project. This is a lot of fil
 
 Configuration related to writing prose.  This is more general than the [[*org-mode][org-mode]] section, but, since a lot of writing happens in ~org-mode~, you may want to check that section as well.
 
+*** Style
+
 We will default to use DOOM's ~zen~ module when writing.  I find that the larger and more centered text is a bit more ascetically pleasing.
 
 ~zen~ mode also enables ~variable-pitch-mode~.  [[https://www.reddit.com/r/DoomEmacs/comments/l9jy0h/comment/gljibj9/?utm_source=share&utm_medium=web2x&context=3][This Reddit comment]] from ~@hlissner~ notes that ~variable-pitch-mode~ can have conflicts with other packages, namely ~solaire-mode~ and suggests instead using ~mixed-pitch-mode~
@@ -346,6 +348,7 @@ Using ~mixed-pitchmode~ combined with setting the [[*Font][DOOM font variables]]
 
 #+begin_src elisp
 (add-hook! 'text-mode-hook '+zen/toggle)
+(add-hook! 'git-commit-setup-hook (+zen/toggle -1))
 #+end_src
 
 I find line numbers clash with the ascetic of ~zen~, so let's turn them off.
