@@ -30,21 +30,30 @@ do
   source $file
 done
 
-# initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-# compinit
-if [ $(date +'%j') != $(/usr/bin/stat -f '%Sm' -t '%j' ${ZDOTDIR:-$HOME}/.zcompdump) ]; then
-  compinit
-else
-  compinit -C
-fi
-
-# load every completion after autocomplete loads
+# load every completion after autocomplete loads ideally, most comleitions will
+# actually be coming from zsh-completions in the next step, but this allows us
+# to configure zsh's compleition and manually add compleitions if necessary
 for file in ${(M)config_files:#*/completion.zsh}
 do
   source $file
 done
 
+# use zsh-copmletions brew package for autocomplete
+# https://github.com/zsh-users/zsh-completions
+if [[ -a  /usr/local/share/zsh-completions ]]
+then
+  FPATH=/usr/local/share/zsh-completions:$FPATH
+
+  # initialize autocomplete here, otherwise functions won't be loaded
+  autoload -Uz compinit
+  # Cache compinit and only refresh one a day
+  # See https://htr3n.github.io/2018/07/faster-zsh/ for more
+  if [ $(date +'%j') != $(/usr/bin/stat -f '%Sm' -t '%j' ${ZDOTDIR:-$HOME}/.zcompdump) ]; then
+    compinit
+  else
+    compinit -C
+  fi
+fi
 unset config_files
 
 # Better history
