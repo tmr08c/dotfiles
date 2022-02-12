@@ -1,4 +1,7 @@
-zmodload zsh/zprof
+# Uncomment the following (and `zrpof` line at the end of the file) to debug
+# performance issues
+#
+# zmodload zsh/zprof
 
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
@@ -73,3 +76,5 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 eval "$(direnv hook zsh)"
 # A shortcut to access the asdf-managed version of `direnv`
 direnv() { asdf exec direnv "$@"; }
+
+# zprof
