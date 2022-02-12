@@ -68,8 +68,6 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Add direnv hook to load `.envrc` files
