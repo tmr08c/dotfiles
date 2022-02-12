@@ -69,13 +69,6 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Run light/dark mode script based on current OS theme
-if [[ ! ( $(darkMode) =~ 'Dark' ) ]]; then
-  light-mode
-else
-  dark-mode
-fi
-
 # Add direnv hook to load `.envrc` files
 eval "$(direnv hook zsh)"
 # A shortcut to access the asdf-managed version of `direnv`
