@@ -106,7 +106,7 @@ Set base directory for =org= files.
 Having template files can be a bit easier to manager than creating the templates in-line as a part of configuration. We define a variable to point to our templates sub-directory, so we can reference it later.
 
 #+begin_src elisp
-(defvar tr/org-templates-directory (concat org-directory "templates/"))
+(defconst tr/org-templates-directory (concat org-directory "templates/"))
 #+end_src
 
 Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489993881][existing capture templates from DOOM]].
@@ -115,7 +115,7 @@ Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489
 (after! org
   (add-to-list 'org-capture-templates
              `("l" "TIL" entry
-               (file ,(concat org-directory "til.org"))
+               (file ,(expand-file-name "til.org" org-directory))
                "* %t\nSomething")))
 #+end_src
 
@@ -129,46 +129,15 @@ Put org-roam files in a sub-directory with our other org files.
 
 **** Dailies
 
-Configure org roam dailies to use our own template for daily files. We also add some additional quick capture commands.
+Configure org roam dailies to use our own template for daily files.
 
 #+begin_src elisp
+(require 'f)
 (setq org-roam-dailies-capture-templates
-      (let ((head (with-temp-buffer
-                    (insert-file-contents (concat tr/org-templates-directory "daily.org"))
-                    (buffer-string))))
-            `(("d" "default" entry
-               #'org-roam-capture--get-point
-               "* %?"
-               :file-name "daily/%<%Y-%m-%d>"
-               :head ,head)
-              ("t" "todo" item
-               #'org-roam--capture-get-point
-               "[ ]"
-               :file-name "daily/%<%Y-%m-%d>"
-               :head ,head
-               :olp ("Planning")))))
-;; (setq org-roam-dailies-capture-templates
-;;           (let ((head "#+title: %<%Y-%m-%d (%A)>\n#+startup: showall\n* [/] Do Today\n* [/] Maybe Do Today\n* Journal\n"))
-;;             `(("j" "journal" entry
-;;                #'org-roam-capture--get-point
-;;                "* %<%H:%M> %?"
-;;                :file-name "daily/%<%Y-%m-%d>"
-;;                :head ,head
-;;                :olp ("Journal"))
-;;               ("t" "do today" item
-;;                #'org-roam-capture--get-point
-;;                "[ ] %(princ as/agenda-captured-link)"
-;;                :file-name "daily/%<%Y-%m-%d>"
-;;                :head ,head
-;;                :olp ("Do Today")
-;;                :immediate-finish t)
-;;               ("m" "maybe do today" item
-;;                #'org-roam-capture--get-point
-;;                "[ ] %(princ as/agenda-captured-link)"
-;;                :file-name "daily/%<%Y-%m-%d>"
-;;                :head ,head
-;;                :olp ("Maybe Do Today")
-;;                :immediate-finish t))))
+      (let ((daily-template (f-read-text (expand-file-name  "daily.org" tr/org-templates-directory)))
+            (daily-file "%<%Y-%m-%d>.org"))
+        `(("d" "default" entry ""
+           :target (file+head+olp ,daily-file ,daily-template ("Grateful or Excited About"))))))
 #+end_src
 
 * Programming
