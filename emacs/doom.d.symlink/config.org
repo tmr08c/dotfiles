@@ -323,14 +323,11 @@ The simple workaround is to use mixed-pitch-mode everywhere you used to use vari
 
 Using ~mixed-pitchmode~ combined with setting the [[*Font][DOOM font variables]] seems to work for me.
 
-#+begin_src elisp
-(add-hook! 'text-mode-hook '+zen/toggle)
-(add-hook! 'git-commit-setup-hook (+zen/toggle -1))
+For the modes that I use for writing, I will enable ~zen~ mode and also turn off line numbers since they don't work with the ascetic.
+
 #+end_src
-
-I find line numbers clash with the ascetic of ~zen~, so let's turn them off.
-
 #+begin_src elisp
-(remove-hook! 'text-mode-hook
-              #'display-line-numbers-mode)
+(add-hook! 'writeroom-mode-enable-hook (display-line-numbers-mode -1))
+(add-hook! 'org-mode-hook '+zen/toggle)
+(add-hook! 'markdown-mode-hook '+zen/toggle)
 #+end_src
