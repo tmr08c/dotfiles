@@ -372,7 +372,6 @@ Using ~mixed-pitchmode~ combined with setting the [[*Font][DOOM font variables]]
 
 For the modes that I use for writing, I will enable ~zen~ mode and also turn off line numbers since they don't work with the ascetic.
 
-#+end_src
 #+begin_src elisp
 (add-hook! 'writeroom-mode-enable-hook (display-line-numbers-mode -1))
 (add-hook! 'org-mode-hook '+zen/toggle)
