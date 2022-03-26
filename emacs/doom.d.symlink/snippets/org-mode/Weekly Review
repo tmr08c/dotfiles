@@ -1,0 +1,64 @@
+# -*- mode: snippet -*-
+# name: Weekly Review
+# key: wr
+# --
+
+#+title: Weekly Review - `(format-time-string "%B %d, %Y")`
+
+* Notes
+#+BEGIN_COMMENT
+🗒️ Jot down notes during review
+#+END_COMMENT
+
+** Review last week's goals
+
+  - $0
+
+** Time block Review
+
+** Holding area for possible work
+
+* Last Week Review
+** 🧘‍️ Big Wins /  What Made Me Happy?
+#+BEGIN_COMMENT
+What are 5 wins are things that made me happy this week
+#+END_COMMENT
+
+1.
+
+** 🏋️ What Lessons Did I Learn / How Will I Improve?
+
+1. Item 1
+2. Item 2
+
+* This Week
+** 📅 Important Dates
+#+BEGIN_COMMENT
+=SPC m d t= to add timestamp
+#+END_COMMENT
+** ✔️ Goals For This Week
+
+1. Item 1
+2. Item 1
+3. Item 1
+4. Item 1
+5. Item 1
+
+** 🥳 How I'll Make This Week Great / Fun
+
+1. Item 1
+2. Item 1
+3. Item 1
+4. Item 1
+5. Item 1
+
+** 📚 Try Learning Something New
+
+1. Item 1
+2. Item 1
+
+* Projects
+
+#+BEGIN_COMMENT
+What do I need to do to move projects forwards
+#+END_COMMENT

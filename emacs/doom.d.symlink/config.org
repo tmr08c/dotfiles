@@ -139,6 +139,53 @@ Configure org roam dailies to use our own template for daily files.
         `(("d" "default" entry ""
            :target (file+head+olp ,daily-file ,daily-template ("Grateful or Excited About"))))))
 #+end_src
+*** Weekly Reviews
+
+At the end of each week I fill out a review/journal entry into an org file.
+
+I am leveraging DOOM's ~file-templates~ modules to auto-fill my weekly reviews based on a snippet. First, I set up some helpful variables.
+
+#+begin_src elisp
+(setq tr/weekly-review--weekly-review-directory (expand-file-name "weekly-reviews/" org-directory))
+(setq tr/weekly-review--file-name-regexp "[[:digit:]]\\{8\\}-weekly-review.org")
+(setq tr/weekly-review--file-name-format "%Y%m%d-weekly-review.org")
+#+end_src
+
+I register a new file template that looks for files that match a specified regex and use my snippet "wr" (for weekly review).
+
+#+begin_src elisp
+(set-file-template! tr/weekly-review--file-name-regexp :mode 'org-mode :trigger "wr")
+#+end_src
+
+Now I can write a function to open a file with a name that matches the regular expression above and it will autoload my template.
+
+#+begin_src elisp
+(defun tr/weekly-review--new-entry ()
+  "Create a new weekly review entry"
+  (interactive)
+  (find-file (expand-file-name (format-time-string tr/weekly-review--file-name-format) tr/weekly-review--weekly-review-directory)))
+#+end_src
+
+And another function that finds the most recent entry in my weekly reviews directory and opens it.
+
+#+begin_src elisp
+(defun tr/weekly-review--find-current-entry ()
+  "Find and open the most recent weekly review file"
+  (interactive)
+  (find-file (car (directory-files tr/weekly-review--weekly-review-directory 'full tr/weekly-review--file-name-regexp 'nil 1))))
+#+end_src
+
+I bind these to be under the ~n~ (~notes~) prefix with DOOM, since that is where other org-related functionality goes.
+
+#+begin_src elisp
+(map! :leader
+      (:prefix "n"
+       (:prefix ("w" . "Weekly Review")
+        :desc "New Entry"
+        "n" #'tr/weekly-review--new-entry
+        :desc "Current Entry"
+        "w" #'tr/weekly-review--find-current-entry)))
+#+end_src
 
 * Programming
 ** General
