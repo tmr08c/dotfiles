@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: New Chapter Notes
+# key: ncn
+# --
+
+* Chapter ${1:N} - ${2:title}
+** Book Highlights
+** My Notes
+** Discussion
+*** Topics Ideas
+*** Discussion Notes
