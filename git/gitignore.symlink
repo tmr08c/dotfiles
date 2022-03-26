@@ -10,3 +10,6 @@
 # VS Code Artifacts
 .vscode
 .elixir_ls
+
+# Emacs things
+.projectile
