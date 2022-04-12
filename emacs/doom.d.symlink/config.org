@@ -172,7 +172,7 @@ And another function that finds the most recent entry in my weekly reviews direc
 (defun tr/weekly-review--find-current-entry ()
   "Find and open the most recent weekly review file"
   (interactive)
-  (find-file (car (directory-files tr/weekly-review--weekly-review-directory 'full tr/weekly-review--file-name-regexp 'nil 1))))
+  (find-file (car (last (directory-files tr/weekly-review--weekly-review-directory 'full tr/weekly-review--file-name-regexp 'nil)))))
 #+end_src
 
 I bind these to be under the ~n~ (~notes~) prefix with DOOM, since that is where other org-related functionality goes.
