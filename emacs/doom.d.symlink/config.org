@@ -116,7 +116,9 @@ Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489
   (add-to-list 'org-capture-templates
              `("l" "TIL" entry
                (file ,(expand-file-name "til.org" org-directory))
-               "* %t\nSomething")))
+               "* %t\nSomething"))
+  (add-to-list 'org-capture-templates
+             `("w" "What I did this Week" item (file+datetree ,(expand-file-name "work/cpower/what-i-did-this-week.org" org-directory)) "- %?" :jump-to-captured 1)))
 #+end_src
 
 *** org-roam
