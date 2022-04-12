@@ -256,9 +256,6 @@ Configuration tied to specific languages or modes.
 #+end_src
 
 *** Elixir
-:PROPERTIES:
-:ID:       76baa866-cd2e-40b1-8b88-b0281b186658
-:END:
 
 ;; (defun tr/flycheck-dialyxir-setup ()
 ;;   (interactive)
