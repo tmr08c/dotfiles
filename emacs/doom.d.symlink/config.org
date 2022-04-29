@@ -345,6 +345,18 @@ LSP lens will provide suggested typespecs. This is nice, but I find it adds a fa
     (setq lsp-lens-enable nil)))
 #+end_src
 
+**** ExUnit
+
+Out of the box, DOOM provides bindings for most functions provided by [[https://github.com/ananthakumaran/exunit.el][exunit.el]]. One that it does not provide is ~exunit-debug~ (using IEx to run the test, so you can use ~IEx.pry~).
+
+#+begin_src elisp
+(map! :after elixir-mode
+    :localleader
+    :map elixir-mode-map
+    :prefix "t"
+    "d" #'exunit-debug)
+#+end_src
+
 *** Ruby
 
 #+begin_src elisp
