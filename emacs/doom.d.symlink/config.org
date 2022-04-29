@@ -188,6 +188,24 @@ I bind these to be under the ~n~ (~notes~) prefix with DOOM, since that is where
         :desc "Current Entry"
         "w" #'tr/weekly-review--find-current-entry)))
 #+end_src
+** elfeed
+
+Elfeed is an RSS reader within Emacs and is enabled with the ~rss~ module from DOOM. I also have the ~org~ flag enabled, so my feed list can be found in [[org:elfeed.org][elfeed.org]].
+
+In the DOOM docs, they include a snippet to have elfeed update on opening. This seems useful.
+
+#+begin_src elisp
+(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+#+end_src
+
+Since I don't always get through all of the articles, I want to widen the default search query a bit.  This also has a potentially positive side effect of getting a recent article or two from newly added feeds. Because this range is wider, I default to only showing unread entries.
+
+  #+begin_src elisp
+(after! elfeed
+  (setq elfeed-search-filter "@2-month-ago +unread"))
+  #+end_src
+
+
 
 * Programming
 ** General
