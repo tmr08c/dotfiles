@@ -216,6 +216,12 @@ Tell Projectile to look into the =~/code= directory for adding new projects.
 (setq projectile-project-search-path '("~/code/"))
 #+end_src
 
+Sort files by recently active buffers and then recently opened files.
+
+#+begin_src elisp
+(setq projectile-sort-order 'recently-active)
+#+end_src
+
 *** Formatting
 
 Auto-formatting is enabled via =(format +onsave)= in =init.el=. There are some modes where this doesn't always work as well, so we can disable it.
