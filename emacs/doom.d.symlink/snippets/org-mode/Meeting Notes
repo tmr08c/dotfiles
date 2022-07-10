@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: Meeting Notes
+# key: mn
+# --
+
+** TODO ${1:Meeting Name}
+*** Notes
+  $0
+**** Holding Area
+*** TODO Action Items [/]

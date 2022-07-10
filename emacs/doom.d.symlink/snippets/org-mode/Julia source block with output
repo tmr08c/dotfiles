@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Julia source block with output
+# key: <sjo
+# --
+
+#+begin_src julia :results output
+$0
+#+end_src
