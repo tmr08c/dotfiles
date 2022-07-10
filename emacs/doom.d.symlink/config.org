@@ -206,6 +206,19 @@ Since I don't always get through all of the articles, I want to widen the defaul
   #+end_src
 
 
+*** Keep database in sync
+
+Let's put our elfeed DB in Dropbox, so it will sync. Out of ease/laziness, I am going to place it within ~org-directory~, since that is a part of Dropbox I already expect Emacs-related things to live within.
+
+#+begin_src elisp
+(setq elfeed-db-directory (concat org-directory "elfeed/db/"))
+#+end_src
+
+I may check my feeds across multiple machines. To keep the database in sync, I want to safe it before we close elfeed. There is [[https://github.com/skeeto/elfeed/issues/169][alternative options]] such as writing a custom function to use for quitting or mention of hooking into the update function. Since my current flow is have elfeed reading sessions, hooking into quitting seems to be a good sync point for me (for now).
+
+#+begin_src elisp
+(advice-add 'elfeed-kill-buffer :before 'elfeed-db-save-safe)
+#+end_src
 
 * Programming
 ** General
