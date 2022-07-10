@@ -118,16 +118,43 @@ Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489
                (file ,(expand-file-name "til.org" org-directory))
                "* %t\nSomething"))
   (add-to-list 'org-capture-templates
-             `("w" "What I did this Week" item (file+datetree ,(expand-file-name "work/cpower/what-i-did-this-week.org" org-directory)) "- %?")))
+             `("w" "What I did this Week" item (file+datetree ,(expand-file-name "work/cpower/what-i-did-this-week.org" org-directory)) "- %?"))
+  (add-to-list 'org-capture-templates
+             `("ma" "DERMS+ Advisory Committee" entry (file+datetree ,(expand-file-name "work/cpower/derms-advisory.org" org-directory)) "*** Prep\n- %?\n*** Meeting Notes" :jump-to-capture t))
+  (add-to-list 'org-capture-templates
+             `("ml" "Weekly IT Leadership" entry (file+datetree ,(expand-file-name "work/cpower/weekly-it-leadership.org" org-directory)) "*** Prep\n- %?\n*** Meeting Notes" :jump-to-capture t))
+  (add-to-list 'org-capture-templates `("m" "Meetings")))
 #+end_src
 
 *** org-roam
-
 Put org-roam files in a sub-directory with our other org files.
 
 #+begin_src elisp
 (setq org-roam-directory (concat org-directory  "roam/"))
 #+end_src
+
+**** Templates
+Override the default capture template to include fields to track when a file was created and updated.
+
+#+begin_src emacs-lisp
+(setq org-roam-capture-templates
+      '(("d" "default" plain "%?" :target
+         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+created_at: %U\n#+last_modified: %U\n\n\n")
+         :unnarrowed t)))
+#+end_src
+
+To update the =last_modified= field, we leverage the built-in =time-stamp= function.
+
+#+begin_src emacs-lisp
+(after! org
+  (setq time-stamp-active t
+        time-stamp-start "#\\+last_modified: [\t]*"
+        time-stamp-end "$"
+        time-stamp-format "\[%Y-%02m-%02d %3a %02H:%02M\]")
+  (add-hook 'before-save-hook 'time-stamp))
+#+end_src
+
+The =last_modified= work was based on [[https://commonplace.doubleloop.net/adding-timestamps-to-org-roam-notes][this post]], which also pointed me to [[https://org-roam.discourse.group/t/update-a-field-last-modified-at-save/321/16][this org-roam Discourse thread]].
 
 **** Dailies
 
