@@ -202,7 +202,8 @@ Since I don't always get through all of the articles, I want to widen the defaul
 
   #+begin_src elisp
 (after! elfeed
-  (setq elfeed-search-filter "@2-month-ago +unread"))
+  (setq elfeed-search-filter "@2-month-ago +unread")
+  (setq elfeed-sort-order 'ascending))
   #+end_src
 
 
@@ -424,4 +425,5 @@ For the modes that I use for writing, I will enable ~zen~ mode and also turn off
 (add-hook! 'writeroom-mode-enable-hook (display-line-numbers-mode -1))
 (add-hook! 'org-mode-hook '+zen/toggle)
 (add-hook! 'markdown-mode-hook '+zen/toggle)
+(add-hook! 'elfeed-show-mode-hook '+zen/toggle)
 #+end_src
