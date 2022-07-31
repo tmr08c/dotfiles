@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: book summary
+# key: *bs
+# --
+* Summary
+** The book in three sentences
+  1.
+  2.
+  3.
+** Impressions
+  #+BEGIN_COMMENT
+  What are your personal feelings and takeaways after reading the book?
+  #+END_COMMENT
+** Who should read it?
+** How the book changed me
+** Top 3 Quotes
