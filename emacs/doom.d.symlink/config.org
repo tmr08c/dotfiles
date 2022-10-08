@@ -477,6 +477,22 @@ You got =web-mode= in my =elixir-mode=! Leverage =polymode= to have web syntax h
     :innermodes '(poly-liveview-expr-elixir-innermode)))
 #+end_src
 
+**** DOOM hacks
+
+DOOM will leverage [[https://github.com/jscheid/dtrt-indent][dtrt-indent]] which
+
+#+begin_quote
+guesses the indentation offset originally used for creating source code files and transparently adjusts the corresponding settings in Emacs, making it more convenient to edit foreign files.
+#+end_quote
+
+I was finding that, for could cause a noticeable delay on first open. [[https://github.com/doomemacs/doomemacs/issues/5823][This issue]] helped me identify the variable ~doom-detect-indentation-excluded-modes~ which could be used to exclude a mode from this behavior. Adding ~elixir-mode~ to this list resulted in a noticeable speed up without any noticeable indentation issues. I am guessing that Elixir's practice of using spaces for indentation and having a formatter may alleviate needs for having to guess at how to display indentation.
+
+#+begin_src elisp
+(after! doom-editor
+  (add-to-list 'doom-detect-indentation-excluded-modes 'elixir-mode))
+#+end_src
+
+**** LSP
 LSP will try to look in all directories within out project. This is a lot of files and can slow things down. We can configure it to ignore some build/dependency directories common to our project.
 
 #+begin_src elisp
