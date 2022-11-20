@@ -47,7 +47,6 @@ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
-
 ###############################################################################
 # Dock, Dashboard, and hot corners                                            #
 ###############################################################################
@@ -55,6 +54,9 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # Run the screensaver if we're in the bottom-left hot corner.
 defaults write com.apple.dock wvous-bl-corner -int 5
 defaults write com.apple.dock wvous-bl-modifier -int 0
+
+# Only show open applications in the Dock
+defaults write com.apple.dock static-only -bool TRUE
 
 # Remove the auto-hiding Dock delay
 defaults write com.apple.dock autohide-delay -float 0
@@ -65,7 +67,12 @@ defaults write com.apple.dock autohide-time-modifier -float 0
 defaults write com.apple.dock autohide -bool true
 
 # Magnify icons on hover
-defaults write come.apple.dock magnification -bool true
+defaults write com.apple.dock magnification -bool true
+defaults write com.apple.dock tilesize -int 16
+defaults write com.apple.dock largesize -int 128
+
+# Kill the Dock for changes to take effect
+killall Dock
 
 # Hide Safari's bookmark bar.
 defaults write com.apple.Safari ShowFavoritesBar -bool false
@@ -79,7 +86,8 @@ defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Change screenshot directory
 mkdir -p ~/Pictures/ScreenShots/
-defaults write com.apple.screencapture location ~/Pictures/ScreenShots/;killall SystemUIServer
+defaults write com.apple.screencapture location ~/Pictures/ScreenShots/
+killall SystemUIServer
 
 # Create `code` directory - this is default place for cloning code
 mkdir -p ~/code
