@@ -71,8 +71,10 @@ bindkey "^[[B" down-line-or-beginning-search # Down
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Add direnv hook to load `.envrc` files
-eval "$(direnv hook zsh)"
-# A shortcut to access the asdf-managed version of `direnv`
-direnv() { asdf exec direnv "$@"; }
+if [ -x "$(command -v direnv)" ]; then
+  eval "$(direnv hook zsh)"
+  # A shortcut to access the asdf-managed version of `direnv`
+  direnv() { asdf exec direnv "$@"; }
+fi
 
 # zprof
