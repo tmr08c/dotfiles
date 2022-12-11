@@ -1,4 +1,8 @@
-# set up asdf stuff. This needs to be in `zshenv` to be usef in all
+# Set PATH, MANPATH, etc., for Homebrew.
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# set up asdf stuff. This needs to be in `zprofile` to be useful in all
 # environments, including [spawned solargraph
 # processes](https://github.com/neoclide/coc-solargraph/issues/12)
-[ -f "/usr/local/opt/asdf/libexec/asdf.sh" ] && source /usr/local/opt/asdf/libexec/asdf.sh
+[ -f $(brew --prefix asdf)/libexec/asdf.sh ] && source $(brew --prefix asdf)/libexec/asdf.sh
+
