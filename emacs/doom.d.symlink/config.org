@@ -134,16 +134,75 @@ Put org-roam files in a sub-directory with our other org files.
 #+end_src
 
 **** Templates
-Override the default capture template to include fields to track when a file was created and updated.
+Set up capture templates to use for creating new org-roam nodes. Inspired by [[https://jethrokuan.github.io/org-roam-guide/][other]] [[https://takeonrules.com/2022/02/07/org-roam-emacs-and-ever-refining-the-note-taking-process/][examples]], I am experimenting with different folders or "slipboxes" for different types of notes.
+
+- reference :: notes on materials created by others (e.g., blog post, book)
+- project :: pages for projects I am or want to work on
+- default :: nodes for more discrete ideas or concepts
 
 #+begin_src emacs-lisp
-(setq org-roam-capture-templates
-      '(("d" "default" plain "%?" :target
-         (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+created_at: %U\n#+last_modified: %U\n\n\n")
-         :unnarrowed t)))
+(let* ((file-name "%<%Y%m%d%H%M%S>-${slug}.org")
+       (project-file-name (concat "project/" file-name))
+       (ref-file-name (concat "ref/" file-name))
+       (properties "#+title: ${title}\n#+created_at: %U\n#+last_modified: %U\n"))
+  (setq org-roam-capture-templates
+        `(("d" "default" plain "%?" :target
+           (file+head ,file-name ,properties)
+           :unnarrowed t)
+          ("p" "project" plain "%?" :target
+           (file+head ,file-name ,(concat properties "#+filetags: :project:\n\n
+,* Overview
+,** Brainstorm
+,#+begin_comment
+- what are the goals of the project?
+- what do you think needs to be done?
+- what are topics that will be relevant for this?
+,#+end_comment
+,** Relevant Resources
+,#+begin_comment
+Spend some time (15-30 minutes) going through the process of [[id:c4b0a1da-da9e-40fe-8c38-129fe47b8292][finding relevant notes]] in your system, turning to outside resources.
+,#+end_comment
+,* Bridge
+,** Current Status
+,** Task List [/]")) :unnarrowed t)
+          ("r" "reference")
+          ("ra" "ref-article" plain "%?" :target
+           (file+head ,ref-file-name ,(concat properties "#+filetags: :article:\n\nlink :: ${link}\n\n"))
+           :unnarrowed t)
+          ("rb" "ref-book" plain "%?" :target
+           (file+head ,ref-file-name ,(concat properties "#+filetags: :book:\n\nauthor :: ${author} \n* Summary
+,** What problem(s) does the book intend to solve?
+,** How proposed solution(s) does it have for these problem(s)?
+,** The book in three sentences
+  1.
+  2.
+  3.
+,** Impressions
+  ,#+BEGIN_COMMENT
+  What are your personal feelings and takeaways after reading the book?
+  ,#+END_COMMENT
+,** Who should read it?
+,** How the book changed me
+,** Rating
+,* Notes"))
+           :unnarrowed t)
+          ("rc" "ref-company" plain "%?" :target
+           (file+head ,ref-file-name ,(concat properties "#+filetags: :company:\n\n"))
+           :unnarrowed t)
+          ("rp" "ref-person" plain "%?" :target
+           (file+head ,ref-file-name ,(concat properties "#+filetags: :person:\n\n"))
+           :unnarrowed t)
+          ("rv" "ref-video" plain "%?" :target
+           (file+head ,ref-file-name ,(concat properties "#+filetags: :video:\n\n"))
+           :unnarrowed t))))
 #+end_src
 
-To update the =last_modified= field, we leverage the built-in =time-stamp= function.
+***** WAIT Remove "book summary" snippet
+SCHEDULED: <2023-03-31 Fri>
+Including the book summary in the capture template for book notes may mean I no longer need the snippet.
+***** Updating ~last_modified~ timestamps
+
+My templates include ~created_at~ and ~last_modified~ fields. To update the =last_modified= field, we leverage the built-in =time-stamp= function.
 
 #+begin_src emacs-lisp
 (after! org
@@ -156,8 +215,7 @@ To update the =last_modified= field, we leverage the built-in =time-stamp= funct
 
 The =last_modified= work was based on [[https://commonplace.doubleloop.net/adding-timestamps-to-org-roam-notes][this post]], which also pointed me to [[https://org-roam.discourse.group/t/update-a-field-last-modified-at-save/321/16][this org-roam Discourse thread]].
 
-**** Dailies
-
+***** Dailies
 Configure org roam dailies to use our own template for daily files.
 
 #+begin_src elisp
@@ -215,6 +273,7 @@ I bind these to be under the ~n~ (~notes~) prefix with DOOM, since that is where
         :desc "Current Entry"
         "w" #'tr/weekly-review--find-current-entry)))
 #+end_src
+
 ** elfeed
 
 Elfeed is an RSS reader within Emacs and is enabled with the ~rss~ module from DOOM. I also have the ~org~ flag enabled, so my feed list can be found in [[org:elfeed.org][elfeed.org]].
