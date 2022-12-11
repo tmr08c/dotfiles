@@ -226,6 +226,22 @@ Configure org roam dailies to use our own template for daily files.
         `(("d" "default" entry ""
            :target (file+head+olp ,daily-file ,daily-template ("Grateful or Excited About"))))))
 #+end_src
+**** Capturing
+***** From elfeed
+Learning from [[https://takeonrules.com/2022/02/07/org-roam-emacs-and-ever-refining-the-note-taking-process/][this post]], add a function for creating a new node from the currently viewed elfeed entry.
+
+#+begin_src elisp
+(defun tr/elfeed--create-roam-node ()
+  "Create roam node from current elfeed entry"
+  (interactive)
+  (let* ((title (elfeed-entry-title elfeed-show-entry))
+         (link (plist-get (elfeed-link-store-link) :link)))
+    (org-roam-capture-
+     :keys "ra"
+     :node (org-roam-node-create :title title )
+     :info (list :link link))))
+#+end_src
+
 *** Weekly Reviews
 
 At the end of each week I fill out a review/journal entry into an org file.
