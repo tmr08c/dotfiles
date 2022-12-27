@@ -229,7 +229,7 @@ Since I don't always get through all of the articles, I want to widen the defaul
 
   #+begin_src elisp
 (after! elfeed
-  (setq elfeed-search-filter "@2-month-ago +unread")
+  (setq elfeed-search-filter "@3-month-ago +unread")
   (setq elfeed-sort-order 'ascending))
   #+end_src
 
