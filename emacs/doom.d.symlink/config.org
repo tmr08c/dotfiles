@@ -90,6 +90,27 @@ Default to word-wrapping everywhere
 #+begin_src elisp
 (setq global-visual-line-mode t)
 #+end_src
+** Window Management
+*** Buffer switching
+Treat manual buffer switching (i.e., ~SPC B B~) the same as automatic buffer switching. Suggested in [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][this Mastering Emacs article]].
+
+#+begin_src elisp
+;; this may be causing problems with elfeed
+;; (setq switch-to-buffer-obey-display-actions 'nil)
+#+end_src
+*** Configure window display preferences
+
+See [[id:0918299e-df89-4a38-a20c-8821460c7f8a][emacs window management]] for more.
+
+#+begin_src elisp
+(add-to-list 'display-buffer-alist
+          `(,(rx (| "*compilation*" "*grep*" "*exunit-compilation*\*"))
+            display-buffer-in-side-window
+            (side . right)
+            (slot . 0)
+            (window-parameters . ((no-delete-other-windows . t)))
+            (window-width . 80)))
+#+end_src
 
 * Applications
 ** org-mode
