@@ -242,6 +242,25 @@ Learning from [[https://takeonrules.com/2022/02/07/org-roam-emacs-and-ever-refin
      :info (list :link link))))
 #+end_src
 
+***** Capture based on context
+Create a DWIM-style function that attempts to use the context of capturing a note to do what I mean. It will fallback to a normal capture template prompt if it's not sure.
+
+#+begin_src elisp
+(defun tr/org-roam--dwim-capture ()
+  (interactive)
+  (pcase major-mode
+    ('elfeed-show-mode       (tr/elfeed--create-roam-node))
+    ;; default to org-roam's capture
+    (mode           (org-roam-capture)))
+  )
+
+(map! :leader
+      (:prefix "n"
+       (:prefix "r"
+        :desc "DWIM capture"
+        "N" #'tr/org-roam--dwim-capture)))
+#+end_src
+
 *** Weekly Reviews
 
 At the end of each week I fill out a review/journal entry into an org file.
