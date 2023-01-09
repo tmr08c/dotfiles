@@ -4,7 +4,9 @@
 # --
 
 ** TODO ${1:Meeting Name}
+*** TODO Prep [/]
+
 *** Notes
   $0
-**** Holding Area
+*** Holding Area
 *** TODO Action Items [/]
