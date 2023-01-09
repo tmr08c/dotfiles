@@ -13,3 +13,8 @@
 
 # Emacs things
 .projectile
+## The default cpature template for project notes will go into this file
+notes.org
+## When with with interactive SQL buffers, I will use the file within a project
+## as a notebook of queries I am working on
+scratch.sql
