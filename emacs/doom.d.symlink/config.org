@@ -122,7 +122,7 @@ Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489
   (add-to-list 'org-capture-templates
              `("ma" "DERMS+ Advisory Committee" entry (file+datetree ,(expand-file-name "work/cpower/derms-advisory.org" org-directory)) "*** Prep\n- %?\n*** Meeting Notes" :jump-to-capture t))
   (add-to-list 'org-capture-templates
-             `("ml" "Weekly IT Leadership" entry (file+datetree ,(expand-file-name "work/cpower/weekly-it-leadership.org" org-directory)) "*** Prep\n- %?\n*** Meeting Notes" :jump-to-capture t))
+             `("ms" "DERMS+ SteerCo" entry (file+datetree ,(expand-file-name "work/cpower/derms-steering-committee.org" org-directory)) "*** Prep\n- %?\n*** Meeting Notes" :jump-to-capture t))
   (add-to-list 'org-capture-templates `("m" "Meetings")))
 #+end_src
 
