@@ -313,6 +313,14 @@ I bind these to be under the ~n~ (~notes~) prefix with DOOM, since that is where
 
 Elfeed is an RSS reader within Emacs and is enabled with the ~rss~ module from DOOM. I also have the ~org~ flag enabled, so my feed list can be found in [[org:elfeed.org][elfeed.org]].
 
+Let's add a shortcut to make it easier to open ~elfeed~. I am going to use the =o(pen)= mnemonic, similar to what is done for ~mu4e~.
+
+#+begin_src elisp
+(map! :leader
+      (:prefix "o"
+        "e" #'=rss))
+#+end_src
+
 In the DOOM docs, they include a snippet to have elfeed update on opening. This seems useful.
 
 #+begin_src elisp
@@ -326,7 +334,6 @@ Since I don't always get through all of the articles, I want to widen the defaul
   (setq elfeed-search-filter "@3-month-ago +unread")
   (setq elfeed-sort-order 'ascending))
   #+end_src
-
 
 *** Keep database in sync
 
