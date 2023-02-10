@@ -414,6 +414,10 @@ Set up LSP for smarter folding with lsp-origami. Config based on [[https://blog.
   (setq lsp-enable-folding t))
 #+end_src
 
+https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root
+#+begin_src elisp
+(advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
+#+end_src
 *** Projectile
 
 Tell Projectile to look into the =~/code= directory for adding new projects.
