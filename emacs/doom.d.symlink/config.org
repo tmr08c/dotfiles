@@ -348,6 +348,35 @@ I may check my feeds across multiple machines. To keep the database in sync, I w
 #+begin_src elisp
 (advice-add 'elfeed-kill-buffer :before 'elfeed-db-save-safe)
 #+end_src
+** email
+
+I am using the ~mu4e~ module from DOOM for managing email.
+
+#+begin_src emacs-lisp
+(set-email-account! "personal"
+  '((mu4e-sent-folder       . "/personal/[Gmail]/Sent Mail")
+    (mu4e-drafts-folder     . "/personal/[Gmail]/Drafts")
+    (mu4e-trash-folder      . "/personal/[Gmail]/Trash")
+    (mu4e-refile-folder     . "/personal/Processed")
+    (smtpmail-smtp-user     . "tmr08c@gmail.com")
+    (smtpmail-smtp-server  . "smtp.gmail.com")
+    (smtpmail-smtp-service . 465)
+    (smtpmail-stream-type  . ssl))
+  t)
+
+;; Configure the function to use for sending mail
+(setq message-send-mail-function 'smtpmail-send-it)
+
+;; https://github.com/doomemacs/doomemacs/issues/6439
+(after! auth-source
+  (setq auth-sources (nreverse auth-sources)))
+#+end_src
+
+With the mu4e mode enabled, DOOM's modeline will be updated to include a notification section which shows the number of unread emails.  I don't want to think about that most of the time, so let's turn it off.
+
+#+begin_src emacs-lisp
+(setq doom-modeline-mu4e nil)
+#+end_src
 
 * Programming
 ** General

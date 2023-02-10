@@ -1,0 +1,98 @@
+# mbsyncrc based on
+# https://pragmaticemacs.wordpress.com/2016/03/22/migrating-from-offlineimap-to-mbsync-for-mu4e/
+# which is based on
+# http://www.ict4g.net/adolfo/notes/2014/12/27/EmacsIMAP.html
+#
+# Also:
+# = http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
+
+# Account Information
+IMAPAccount personal-gmail
+# Address to connect to
+Host imap.gmail.com
+User tmr08c@gmail.com
+Pass GET_MORE_SECURELY
+AuthMechs LOGIN
+SSLType IMAPS
+# CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
+
+# then we specify the local and remote storage
+# - the remote storage is where we get the mail from (e.g., the
+#   specification of an imap account)
+# - the local storage is where we store the email on our computer
+
+# Remote Storage (use the IMAP account specified above)
+IMAPStore personal-gmail-remote
+Account personal-gmail
+
+# Local Storage (create directories WITH MKDIR -P mAILDIR/GMAIL)
+MaildirStore personal-gmail-local
+Path ~/.mail/personal/
+Inbox ~/.mail/personal/INBOX
+Subfolders Verbatim
+
+# CONNECTIONS SPECIFY LINKS BETWEEN REMOTE AND LOCAL FOLDERS
+#
+# CONNECTIONS ARE SPECIFIED USING PATTERNS, WHICH MATCH REMOTE MAIl
+# FOLDERS. SOME COMMONLY USED PATTERS INCLUDE:
+#
+# 1 "*" TO MATCH EVERYTHING
+# 2 "!DIR" TO EXCLUDE "DIR"
+# 3 "DIR" TO MATCH DIR
+
+Channel persona-gmail
+Far :personal-gmail-remote:
+Near :personal-gmail-local:
+Create Both
+Expunge Both
+Patterns * !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin"
+SyncState *
+
+# Channel personal-gmail-inbox
+# Far :personal-gmail-remote:
+# Near :personal-gmail-local:
+# Patterns "INBOX"
+# Create Both
+# Expunge Both
+# SyncState *
+
+# Channel personal-gmail-trash
+# Far :personal-gmail-remote:"[Gmail]/Bin"
+# Near :personal-gmail-local:"[Gmail].Bin"
+# Create Both
+# Expunge Both
+# SyncState *
+
+# Channel personal-gmail-sent
+# Far :personal-gmail-remote:"[Personal-Gmail]/Sent Mail"
+# Near :personal-gmail-local:"[Personal-Gmail].Sent Mail"
+# Create Both
+# Expunge Both
+# SyncState *
+
+# Channel personal-gmail-all
+# Far :personal-gmail-remote:"[Personal-Gmail]/All Mail"
+# Near :personal-gmail-local:"[Personal-Gmail].All Mail"
+# Create Both
+# Expunge Both
+# SyncState *
+
+# Channel personal-gmail-starred
+# Far :personal-gmail-remote:"[Personal-Gmail]/Starred"
+# Near :personal-gmail-local:"[Personal-Gmail].Starred"
+# Create Both
+# Expunge Both
+# SyncState *
+
+# GROUPS PUT TOGETHER CHANNELS, SO THAT WE CAN INVOKE
+# MBSYNC ON A GROUP TO SYNC ALL CHANNELS
+#
+# FOR INSTANCE: "mbsync personal-gmail" GETS MAIL FROM
+# "personal-gmail-inbox", "personal-gmail-sent", and "personal-gmail-trash"
+#
+# Group personal-gmail
+# Channel personal-gmail-inbox
+# Channel personal-gmail-sent
+# Channel personal-gmail-trash
+# Channel personal-gmail-all
+# Channel personal-gmail-starred
