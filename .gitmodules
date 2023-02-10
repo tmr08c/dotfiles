@@ -14,3 +14,6 @@
 	path = elixir/elixir-ls
 	url = https://github.com/elixir-lsp/elixir-ls.git
 
+[submodule "zig/zls"]
+	path = zig/zls
+	url = https://github.com/zigtools/zls
