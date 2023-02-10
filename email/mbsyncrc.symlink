@@ -1,0 +1,49 @@
+# mbsyncrc based on
+# https://pragmaticemacs.wordpress.com/2016/03/22/migrating-from-offlineimap-to-mbsync-for-mu4e/
+# which is based on
+# http://www.ict4g.net/adolfo/notes/2014/12/27/EmacsIMAP.html
+#
+# Also:
+# = http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
+
+# Account Information
+IMAPAccount personal-gmail
+# Address to connect to
+Host imap.gmail.com
+User tmr08c@gmail.com
+PassCmd "security find-internet-password -a \"tmr08c+mu@gmail.com\" -s \"mail.google.com\" -w"
+AuthMechs LOGIN
+SSLType IMAPS
+# CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
+
+# then we specify the local and remote storage
+# - the remote storage is where we get the mail from (e.g., the
+#   specification of an imap account)
+# - the local storage is where we store the email on our computer
+
+# Remote Storage (use the IMAP account specified above)
+IMAPStore personal-gmail-remote
+Account personal-gmail
+
+# Local Storage
+MaildirStore personal-gmail-local
+Path ~/.mail/personal/
+Inbox ~/.mail/personal/INBOX
+Subfolders Verbatim
+
+# CONNECTIONS SPECIFY LINKS BETWEEN REMOTE AND LOCAL FOLDERS
+#
+# CONNECTIONS ARE SPECIFIED USING PATTERNS, WHICH MATCH REMOTE MAIl
+# FOLDERS. SOME COMMONLY USED PATTERS INCLUDE:
+#
+# 1 "*" TO MATCH EVERYTHING
+# 2 "!DIR" TO EXCLUDE "DIR"
+# 3 "DIR" TO MATCH DIR
+
+Channel persona-gmail
+Far :personal-gmail-remote:
+Near :personal-gmail-local:
+Create Both
+Expunge Both
+Patterns "INBOX" "Arch*" "[Gmail]/Trash" "[Gmail]/Sent Mail" "[Gmail]/Drafts" "Processed"
+SyncState *

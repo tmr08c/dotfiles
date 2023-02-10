@@ -51,7 +51,15 @@
 
 (package! lsp-origami)
 (package! polymode)
-(when (featurep! :lang zig)
+(when (modulep! :lang zig)
   (package! ob-zig :recipe (:host github :repo "jolby/ob-zig.el")))
 
+
 (package! org-roam-ui)
+
+;; Do not install mu4e-alert as a part of the mu4e module.
+;;
+;; I don't think I want notifications (I think they only work for Linux anyway)
+;; or an unread email count in my modeline.
+(when (modulep! :email mu4e)
+  (package! mu4e-alert :disable t))
