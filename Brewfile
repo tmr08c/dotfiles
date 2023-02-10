@@ -40,6 +40,7 @@ brew "hub"
 brew "imagemagick"
 brew "ispell"
 brew "languagetool"
+brew "libgccjit"
 brew "mailutils"
 brew "markdown", link: false
 brew "memtester"
