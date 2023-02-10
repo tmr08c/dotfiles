@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Update to the latest released version of zls
+
+cd zls || exit
+
+git fetch --tags
+latesttag=$(git describe --tags `git rev-list --tags --max-count=1`)
+
+echo checking out ${latesttag}
+git checkout ${latesttag}
+
+echo building release
+zig build -Drelease-safe
+./zig-out/bin/zls --config
