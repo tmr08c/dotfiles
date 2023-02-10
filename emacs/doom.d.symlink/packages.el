@@ -53,3 +53,5 @@
 (package! polymode)
 (when (featurep! :lang zig)
   (package! ob-zig :recipe (:host github :repo "jolby/ob-zig.el")))
+
+(package! org-roam-ui)
