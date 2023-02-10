@@ -44,6 +44,7 @@ brew "mailutils"
 brew "markdown", link: false
 brew "memtester"
 brew "mosh"
+brew "mu"
 brew "neovim"
 brew "pandoc"
 brew "postgresql@14", restart_service: true
