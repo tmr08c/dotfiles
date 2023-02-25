@@ -362,10 +362,7 @@ Set up LSP for smarter folding with lsp-origami. Config based on [[https://blog.
   (add-hook! 'lsp-after-open-hook #'lsp-origami-try-enable)
 
   ;; Enable folding
-  (setq lsp-enable-folding t)
-
-  ;; tailwind
-  (use-package! lsp-tailwindcss))
+  (setq lsp-enable-folding t))
 #+end_src
 
 *** Projectile
