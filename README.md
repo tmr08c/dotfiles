@@ -2,35 +2,6 @@ These fork from [holman does dotfiles](https://github.com/holman/dotfiles/fork).
 
 # My Things
 
-## Shell
-
-I am currently experimenting with using [fish](https://fishshell.com/) for my shell.
-
-It can be `brew install`ed. After that, we need to:
-
-```bash
-sudo echo '/usr/bin/local/fish' >> /etc/shells
-chsh -s /usr/local/bin/fish
-```
-
-If I still with it, this should probably be added to the setup scripts.
-
-### oh-my-fish
-
-While testing fish, I will be also testing [oh-my-fish](https://github.com/oh-my-fish/oh-my-fish). It looks like switching to fish will require some changes from assumptions in this repo, and I may want to use [someone else's dotifles](https://github.com/sagebind/dotfiles/blob/master/install.fish) for inspiration.
-
-## (DOOM) Emacs 
-
-This repo includes a submoodule that points to DOOM Emacs and a symlink to the `.doom` folder. While this should get Doom Emacs mostly running, it seems like it's still best to run `doom install`. It is safe to re-run and will install pieces that won't be installed with `doom sync`.
-
-### Github layer
-
-* To get the Github layer working you need to set a Github Oauth Token:
-
-```
-git config --global github.oauth-token <token>
-```
-
 ## Additional macOS setup
 
 _There may be better ways to do this with plist magic_
@@ -59,41 +30,11 @@ This should open up a Finder window showing a folder containing the SF fonts. Se
 
 These are things that need to be installed downloaded that are not installed via the bootstrap script.
 
-These are mostly to play nice with the [JS](http://spacemacs.org/layers/+lang/javascript/README.html), [TypeScript](http://spacemacs.org/layers/+lang/typescript/README.html), and [React](http://spacemacs.org/layers/+frameworks/react/README.html) layers in Spacemacs.
-
-### Node Things
-
-```
-npm install -g tern js-beautify eslint babel-eslint eslint-plugin-react typescript-formatter javascript-typescript-langserver
-```
-
-### Alfred
-
-Alfred will be install through homebrew.
-
-To use instead of spotlight, you need to disable the spotlight keyboard shortcut:
-
-`System Preferences` --> `Spotlight` --> `Keyboard Shortcuts` button 
-
-You can then update the Alfred settings to `CMD + Space` 
-
-### Third-party applications
-
-* [Spectacles](https://www.spectacleapp.com)
-
 ### Style Prefernces
 
 * Remove stuff from the dock
-* Add the `HOME/Pictures/ScreenShots` direcotry to the dock
+* Add the `HOME/Pictures/ScreenShots` directory to the dock
 
-
-## asdf
-
-### nodejs
-
-```
-bash /usr/local/opt/asdf/plugins/nodejs/bin/import-release-team-keyring
-```
 
 # Things from original project
 
@@ -138,7 +79,7 @@ Run this:
 ```sh
 git clone --recurse-submodules https://github.com/tmr08c/dotfiles.git ~/.dotfiles &&
 cd ~/.dotfiles &&
-script/bootstrap &&
+script/bootstrap
 ```
 
 This will symlink the appropriate files in `.dotfiles` to your home directory.
