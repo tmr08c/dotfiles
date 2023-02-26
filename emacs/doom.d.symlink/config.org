@@ -377,7 +377,7 @@ I am using the ~mu4e~ module from DOOM for managing email.
   '((mu4e-sent-folder       . "/personal/[Gmail]/Sent Mail")
     (mu4e-drafts-folder     . "/personal/[Gmail]/Drafts")
     (mu4e-trash-folder      . "/personal/[Gmail]/Trash")
-    (mu4e-refile-folder     . "/personal/Processed")
+    (mu4e-refile-folder     . "/Processed")
     (smtpmail-smtp-user     . "tmr08c@gmail.com")
     (smtpmail-smtp-server  . "smtp.gmail.com")
     (smtpmail-smtp-service . 465)
