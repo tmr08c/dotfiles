@@ -11,7 +11,7 @@ IMAPAccount personal-gmail
 # Address to connect to
 Host imap.gmail.com
 User tmr08c@gmail.com
-Pass GET_MORE_SECURELY
+PassCmd "security find-internet-password -a \"tmr08c+mu@gmail.com\" -s \"mail.google.com\" -w"
 AuthMechs LOGIN
 SSLType IMAPS
 # CertificateFile /opt/local/share/curl/curl-ca-bundle.crt
@@ -45,7 +45,8 @@ Far :personal-gmail-remote:
 Near :personal-gmail-local:
 Create Both
 Expunge Both
-Patterns * !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin"
+Patterns "INBOX" "Arch*" "[Gmail]/Trash" "[Gmail]/Sent Mail" "Processed"
+# Patterns * !"[Gmail]/All Mail" !"[Gmail]/Important" !"[Gmail]/Starred" !"[Gmail]/Bin"
 SyncState *
 
 # Channel personal-gmail-inbox
