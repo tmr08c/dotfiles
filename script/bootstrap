@@ -124,9 +124,12 @@ install_dotfiles() {
   info 'installing dotfiles'
 
   local overwrite_all=false backup_all=false skip_all=false
+  # enable extended glob for more advanced pattern matching when expanding file
+  # name to drop extensions
+  shopt -s extglob
 
-  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*'); do
-    dst="$HOME/.$(basename "${src%.*}")"
+  for src in $(find -E -H "$DOTFILES_ROOT" -maxdepth 2 -regex '.*\.symlink(.gpg)?' -not -path '*.git*'); do
+    dst="$HOME/.$(basename "${src%.symlink?(.gpg)}")"
     link_file "$src" "$dst"
   done
 }
