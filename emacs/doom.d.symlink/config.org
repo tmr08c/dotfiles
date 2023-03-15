@@ -369,8 +369,9 @@ I may check my feeds across multiple machines. To keep the database in sync, I w
 (advice-add 'elfeed-kill-buffer :before 'elfeed-db-save-safe)
 #+end_src
 ** email
-
 I am using the ~mu4e~ module from DOOM for managing email.
+
+Let's set up my personal Gmail account below.
 
 #+begin_src emacs-lisp
 (set-email-account! "personal"
@@ -383,13 +384,30 @@ I am using the ~mu4e~ module from DOOM for managing email.
     (smtpmail-smtp-service . 465)
     (smtpmail-stream-type  . ssl))
   t)
+#+end_src
+*** Sending mail
+While it doesn't seem to be the preferred long-term solution, I am using built-in Emacs functionality for sending email. Since I am still getting used to using ~mu4e~ for email and don't send that many emails, this has sufficed. If I dive in further, I may want to revisit the DOOM docs which mention SMTP servers or forwarders.
 
-;; Configure the function to use for sending mail
+#+begin_src emacs-lisp
 (setq message-send-mail-function 'smtpmail-send-it)
+#+end_src
 
-;; https://github.com/doomemacs/doomemacs/issues/6439
+I also use the following to fix a macOS [[https://github.com/doomemacs/doomemacs/issues/6439][issue]] with the ordering of Keychain entries that was causing issues sending emails.
+
+#+begin_src emacs-lisp
 (after! auth-source
   (setq auth-sources (nreverse auth-sources)))
+#+end_src
+*** Bookmarks
+I find that the default bookmarks end up a bit nosier than are useful for me. I think a large part of this, especially re: unread and recent messages, is that I don't really archive much, but instead put emails in a "processed" folder. As a result, filtering out archived/trashed emails doesn't really help me. I'm updating the bookmarks to be more focused around the Inbox. I'm also going to try out keeping a few of the others (today, last 7 days, etc.) to see how I like them.
+
+#+begin_src elisp
+(setq mu4e-bookmarks '(
+        (:name "Inbox" :query "maildir:\"/INBOX\"" :key ?i)
+        (:name "Unread Inbox" :query "maildir:\"/INBOX\" AND flag:unread" :key ?u)
+        (:name "Today's messages" :query "date:today..now" :key ?t)
+        (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
+        (:name "Flagged messages":query "flag:flagged" :key ?f)))
 #+end_src
 
 * Programming
