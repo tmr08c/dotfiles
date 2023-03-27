@@ -98,7 +98,7 @@ Default to word-wrapping everywhere
 Set base directory for =org= files.
 
 #+begin_src elisp
-(setq org-directory "~/Dropbox/Notes/org/")
+(setq org-directory "~/Library/CloudStorage/Dropbox/Notes/org/")
 #+end_src
 
 *** Templates
