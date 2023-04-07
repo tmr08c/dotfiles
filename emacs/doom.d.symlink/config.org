@@ -493,6 +493,12 @@ Create a list of common databases that I connect to. Running the command =sql-co
                 (sql-password "")
                 (sql-database "derms_dev"))))
 #+end_src
+*** code-compass
+I am testing out the https://github.com/ag91/code-compass
+
+#+begin_src elisp
+(use-package! code-compass)
+#+end_src
 
 ** Languages
 
