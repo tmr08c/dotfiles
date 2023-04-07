@@ -23,6 +23,7 @@ brew "bat"
 brew "libevent"
 brew "gnutls"
 brew "cask"
+brew "cloc"
 brew "cmake"
 brew "ctags", link: false
 brew "dos2unix"
