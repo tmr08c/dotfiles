@@ -280,6 +280,31 @@ Config currently copy/pasted from the repo.
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
 #+end_src
+**** Refiling
+***** Archiving
+As of <2023-04-04 Tue>, I am still trying to figure out how to best structure my notes. I am interested in the [[id:a29607ab-0416-4539-9ce8-59c19595c4d8][PARA method]] from [[id:9f7265c3-fe24-4562-a95e-f781b54a8311][Building a Second Brain]]. The folder-based approach doesn't /quite/ seem to align with the Roam-style of note taking, but I have been trying to have project files.
+
+Another aspect of the PARA method is "archiving" notes. I will use a sub-directory to store "archived" notes. We define a shortcut to move notes into this directory.
+
+#+begin_src elisp
+(setq tr/org-roam-archive-directory (concat org-roam-directory "archive/"))
+
+(defun tr/org-roam--archive-note ()
+  (interactive)
+  (unless (file-directory-p tr/org-roam-archive-directory)
+    (make-directory tr/org-roam-archive-directory t))
+  (doom/move-this-file tr/org-roam-archive-directory)
+  )
+
+(map! :leader
+      (:prefix "n"
+       (:prefix "r"
+        :desc "Archive note"
+        "A" #'tr/org-roam--archive-note)))
+#+end_src
+
+****** TODO <2023-04-04 Tue> Should I hide archived notes?
+Part of the value of archived notes is that they exist should you need them, but they don't show up in your active note area which should make your active notes easier to search. I'm curious if I should look into having archived notes not show up in something like ~org-roam-node-find~ and whether I want to have a version that includes the archive.
 
 *** Weekly Reviews
 
