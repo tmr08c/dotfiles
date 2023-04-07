@@ -587,6 +587,12 @@ I was finding that, for could cause a noticeable delay on first open. [[https://
 #+end_src
 
 **** LSP
+Now that LSP mode has [[https://emacs-lsp.github.io/lsp-mode/page/lsp-elixir/][Elixir support]]. It can manage installing the language server. It seems that they set the version to install as a part of the package. This is probably good for stability, but can leave us on old versions of elixir-ls. Let's tell it to instal something a bit newer:
+
+#+begin_src elisp
+(setq lsp-elixir-ls-version "v0.13.0")
+#+end_src
+
 LSP will try to look in all directories within out project. This is a lot of files and can slow things down. We can configure it to ignore some build/dependency directories common to our project.
 
 #+begin_src elisp
@@ -607,6 +613,14 @@ LSP lens will provide suggested typespecs. This is nice, but I find it adds a fa
   (after! lsp-mode
     (setq lsp-lens-enable nil)))
 #+end_src
+***** Formatting
+As of <2023-03-10 Fri> I am having issues with having LSP formatting, it keeps claiming there are syntax errors even though =mix format= works. I am going to tell DOOM to not use LSP for formatting for now.
+
+#+begin_src elisp
+(setq-hook! 'elixir-mode-hook +format-with-lsp nil)
+#+end_src
+
+I think this falls back to the =elixir-format= function from ~emacs-elixir~ which /seems/ to work more reliably.
 
 **** ExUnit
 
