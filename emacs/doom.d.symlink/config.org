@@ -118,11 +118,11 @@ Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489
                (file ,(expand-file-name "til.org" org-directory))
                "* %t\nSomething"))
   (add-to-list 'org-capture-templates
+             `("e" "Education Resource" entry
+               (file ,(expand-file-name "education-resources.org" org-directory))
+               "* TODO [[%^{LINK}][%^{DESC}]] %^g \n:PROPERTIES:\n:Created: %U\n:END:\n\n%?"))
+  (add-to-list 'org-capture-templates
              `("w" "What I did this Week" item (file+datetree ,(expand-file-name "work/cpower/what-i-did-this-week.org" org-directory)) "- %?"))
-  (add-to-list 'org-capture-templates
-             `("ma" "DERMS+ Advisory Committee" entry (file+datetree ,(expand-file-name "work/cpower/derms-advisory.org" org-directory)) "*** Prep\n- %?\n*** Meeting Notes" :jump-to-capture t))
-  (add-to-list 'org-capture-templates
-             `("ms" "DERMS+ SteerCo" entry (file+datetree ,(expand-file-name "work/cpower/derms-steering-committee.org" org-directory)) "*** Prep\n- %?\n*** Meeting Notes" :jump-to-capture t))
   (add-to-list 'org-capture-templates `("m" "Meetings")))
 #+end_src
 
