@@ -10,10 +10,6 @@
 [submodule "emacs/emacs.d.symlink"]
 	path = emacs/emacs.d.symlink
 	url = https://github.com/hlissner/doom-emacs.git
-[submodule "elixir/elixir-ls"]
-	path = elixir/elixir-ls
-	url = https://github.com/elixir-lsp/elixir-ls.git
-
 [submodule "zig/zls"]
 	path = zig/zls
 	url = https://github.com/zigtools/zls
