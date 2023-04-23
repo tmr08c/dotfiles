@@ -444,7 +444,14 @@ I find that the default bookmarks end up a bit nosier than are useful for me. I 
         (:name "Last 7 days" :query "date:7d..now" :hide-unread t :key ?w)
         (:name "Flagged messages":query "flag:flagged" :key ?f)))
 #+end_src
+** GPTel
+repo :: https://github.com/karthink/gptel
 
+#+begin_quote
+GPTel is a simple, no-frills ChatGPT client for Emacs.
+#+end_quote
+
+I am leveraging [[https://github.com/karthink/gptel/commit/6f951ed690d9dc611b982a3574eb9f80a68499f8][the .authinfo]] support for securely storing the API key.
 * Programming
 ** General
 *** LSP
