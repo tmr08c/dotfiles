@@ -64,6 +64,5 @@
 (when (modulep! :email mu4e)
   (package! mu4e-alert :disable t))
 
-
 (package! code-compass
-  :recipe (:host github :repo "ag91/code-compass" :branch "main" :files (:defaults "scripts" "pages")))
+  :recipe (:files (:defaults "scripts" "pages")))
