@@ -452,6 +452,24 @@ GPTel is a simple, no-frills ChatGPT client for Emacs.
 #+end_quote
 
 I am leveraging [[https://github.com/karthink/gptel/commit/6f951ed690d9dc611b982a3574eb9f80a68499f8][the .authinfo]] support for securely storing the API key.
+*** Possible alternatives
+- https://github.com/xenodium/chatgpt-shell
+** Copilot.el
+repo :: https://github.com/zerolfx/copilot.el
+
+#+begin_src emacs-lisp
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+#+end_src
+*** TODO Explore additional or alternative keybindings
+- [[https://github.com/zerolfx/copilot.el/issues/103][This thread]] has some suggestions
+- [[https://robert.kra.hn/posts/2023-02-22-copilot-emacs-setup/][This post]] has examples (possibly mentioned in above thread), but also covers usage, so is worth reading
 * Programming
 ** General
 *** LSP

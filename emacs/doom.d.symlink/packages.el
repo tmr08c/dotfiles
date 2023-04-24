@@ -65,3 +65,6 @@
   (package! mu4e-alert :disable t))
 
 (package! gptel)
+
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
