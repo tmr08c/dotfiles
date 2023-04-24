@@ -668,7 +668,6 @@ For the modes that I use for writing, I will enable ~zen~ mode and also turn off
 
 #+begin_src elisp
 (add-hook! 'writeroom-mode-enable-hook (display-line-numbers-mode -1))
-(add-hook! 'org-mode-hook '+zen/toggle)
-(add-hook! 'markdown-mode-hook '+zen/toggle)
+(add-hook! 'writeroom-mode-disable-hook (display-line-numbers-mode 1))
 (add-hook! 'elfeed-show-mode-hook '+zen/toggle)
 #+end_src
