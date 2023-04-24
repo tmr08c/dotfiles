@@ -19,6 +19,8 @@ then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install)"
   fi
 
+  # Add to PATH for current shell environment
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 exit 0
