@@ -438,7 +438,7 @@ I find that the default bookmarks end up a bit nosier than are useful for me. I 
 * Programming
 ** General
 *** LSP
-
+**** Folding
 Set up LSP for smarter folding with lsp-origami. Config based on [[https://blog.evalcode.com/enable-elixir-code-folding-in-doom-emacs/][this post]].
 
 #+begin_src elisp
@@ -451,7 +451,9 @@ Set up LSP for smarter folding with lsp-origami. Config based on [[https://blog.
   (setq lsp-enable-folding t))
 #+end_src
 
+**** Better handling of multi-root/monorepo projects
 https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root
+
 #+begin_src elisp
 (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
 #+end_src
