@@ -488,12 +488,18 @@ Create a list of common databases that I connect to. Running the command =sql-co
 
 #+begin_src elisp
 (setq sql-connection-alist
-      '((derms-dev (sql-product 'postgres)
+      '((sched-dev (sql-product 'postgres)
                 (sql-port 5432)
                 (sql-server "localhost")
                 (sql-user "postgres")
                 (sql-password "")
-                (sql-database "derms_dev"))))
+                (sql-database "sched_development"))
+       (sched-test (sql-product 'postgres)
+                (sql-port 5432)
+                (sql-server "localhost")
+                (sql-user "postgres")
+                (sql-password "")
+                (sql-database "sched_test"))))
 #+end_src
 
 ** Languages
