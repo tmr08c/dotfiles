@@ -4,7 +4,7 @@
 # Overwrite macOS's default emacs our homebrew version
 brew link --overwrite emacs
 
-ln -s /opt/homebrew/opt/emacs-plus@28/Emacs.app /Applications
+ln -s /opt/homebrew/opt/emacs-plus@29/Emacs.app /Applications
 
 # Install shouldn't do much since I already have my config set up. It's mainly here to run
 # `all-the-icons-install-fonts`.
