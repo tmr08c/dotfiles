@@ -98,7 +98,7 @@ Default to word-wrapping everywhere
 Set base directory for =org= files.
 
 #+begin_src elisp
-(setq org-directory "~/Library/CloudStorage/Dropbox/Notes/org/")
+(setq org-directory "~/Documents/org/")
 #+end_src
 
 *** Templates
@@ -127,10 +127,11 @@ Extend the [[https://github.com/hlissner/doom-emacs/issues/1391#issuecomment-489
 #+end_src
 
 *** org-roam
-Put org-roam files in a sub-directory with our other org files.
+**** Directory
+I am trying out using Logseq as mobile front-end for my org (roam) files. To make this work with the iOS app, it seems like it really wanted to point to a special iCloud, app-specific directory. This is kind of annoying and pushed me to use iCloud instead of Dropbox to sync, but I am hoping the benefit of having an easy way to interact with my org (roam) files on-the-go will outweigh this annoyance.
 
 #+begin_src elisp
-(setq org-roam-directory (concat org-directory  "roam/"))
+(setq org-roam-directory "~/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/")
 #+end_src
 
 **** Templates
@@ -382,7 +383,7 @@ Since I don't always get through all of the articles, I want to widen the defaul
 
 *** Keep database in sync
 
-Let's put our elfeed DB in Dropbox, so it will sync. Out of ease/laziness, I am going to place it within ~org-directory~, since that is a part of Dropbox I already expect Emacs-related things to live within.
+Let's put our elfeed DB in iCloud, so it will sync. Out of ease/laziness, I am going to place it within ~org-directory~, since that is a part of iCloud I already expect Emacs-related things to live within.
 
 #+begin_src elisp
 (setq elfeed-db-directory (concat org-directory "elfeed/db/"))
