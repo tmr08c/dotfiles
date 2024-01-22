@@ -55,6 +55,7 @@ brew "mosh"
 brew "mu"
 brew "neovim"
 brew "pandoc"
+brew "pngpaste"
 brew "poppler"
 brew "postgresql@14", restart_service: true
 brew "reattach-to-user-namespace"
