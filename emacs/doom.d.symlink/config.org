@@ -605,10 +605,10 @@ I was finding that, for could cause a noticeable delay on first open. [[https://
 #+end_src
 
 **** LSP
-Now that LSP mode has [[https://emacs-lsp.github.io/lsp-mode/page/lsp-elixir/][Elixir support]]. It can manage installing the language server. It seems that they set the version to install as a part of the package. This is probably good for stability, but can leave us on old versions of elixir-ls. Let's tell it to instal something a bit newer:
+Now that LSP mode has [[https://emacs-lsp.github.io/lsp-mode/page/lsp-elixir/][Elixir support]]. It can manage installing the language server. It seems that they set the version to install as a part of the package. This is probably good for stability, but can leave us on old versions of elixir-ls. Let's tell it to install something a bit newer:
 
 #+begin_src elisp
-(setq lsp-elixir-ls-version "v0.14.3")
+(setq lsp-elixir-ls-version "v0.19.0")
 #+end_src
 
 LSP will try to look in all directories within out project. This is a lot of files and can slow things down. We can configure it to ignore some build/dependency directories common to our project.
