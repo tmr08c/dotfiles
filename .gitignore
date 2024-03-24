@@ -7,4 +7,8 @@ tmux.symlink/resurrect
 # vim
 config.symlink/nvim/.netrwhist
 
+# direnv
+# This is generated during `asdf direnv setup` and has local, path-specific config
+config.symlink/asdf-direnv/zshrc
+
 node_modules
