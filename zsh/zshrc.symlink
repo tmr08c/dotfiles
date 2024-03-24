@@ -78,3 +78,4 @@ if [ -x "$(command -v direnv)" ]; then
 fi
 
 # zprof
+source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"

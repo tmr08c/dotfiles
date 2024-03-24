@@ -1,3 +1,0 @@
-# add the ability to `use asdf`
-# https://github.com/asdf-community/asdf-direnv#global-asdf-direnv-integration
-source "$(asdf direnv hook asdf)"
