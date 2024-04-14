@@ -50,9 +50,22 @@
 ;(unpin! t)
 
 (package! lsp-origami)
-(package! polymode)
+
 (when (modulep! :lang zig)
   (package! ob-zig :recipe (:host github :repo "jolby/ob-zig.el")))
+
+(when (modulep! :lang elixir )
+  (package! mix :pin "16cc69c")
+
+  ;; Use the tree-sitter version of elixir mode (elixir-ts-mode)
+  ;;
+  ;; - This will ship with core Emacs 30
+  ;; - To install the grammars run `elixir-ts-install-grammar'
+  (when (and (modulep! :lang elixir +tree-sitter)
+             (< emacs-major-version 30))
+    (package! elixir-mode :disable t)
+    (package! elixir-ts-mode :pin "b08d399"))
+  )
 
 
 (package! org-roam-ui)

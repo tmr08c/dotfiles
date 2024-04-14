@@ -566,27 +566,72 @@ Configuration tied to specific languages or modes.
 ;;             (when (derived-mode-p 'tex-mode)
 ;;               (setq my-flycheck-local-cache '((next-checkers . (tex-chktex)))))))
 
-
-You got =web-mode= in my =elixir-mode=! Leverage =polymode= to have web syntax highlighting for our LEEx and HEEx templates (when using sigils). Original implementation came from [[https://blog.evalcode.com/phoenix-liveview-inline-syntax-highlighting-for-emac][this post]].
+**** Elixir (TS) Mode
+The current DOOM module (<2024-04-13 Sat>) sets up =elixir-mode= which provides syntax highlighting without tree-sitter. While the tree-sitter module includes elixir bindings, I /think/ the =elixir-mode= highlighting is still doing it's thing. I am using the DOOM module config as the base and [[https://github.com/cullan/doom-elixir-ts][this repo]] as inspiration to set up the same module config, but hook into [[https://github.com/wkirschbaum/elixir-ts-mode][elixir-ts-mode]] (which I install in ~packages.el~)
 
 #+begin_src elisp
-(use-package! polymode
-  :mode ("\\.ex\\'" . poly-elixir-web-mode)
-  :init (setq! web-mode-engines-alist '(("elixir" . "\\.ex\\'")))
+(use-package! elixir-ts-mode
+  :defer t
+  :init
+  ;; Disable default smartparens config. There are too many pairs; we only want
+  ;; a subset of them (defined below).
+  (provide 'smartparens-elixir)
   :config
-  (define-hostmode poly-elixir-hostmode :mode 'elixir-mode)
-  (define-innermode poly-liveview-expr-elixir-innermode
-    :mode 'web-mode
-    :head-matcher (rx line-start (* space) (or "~L" "~H") (= 3 (char "\"'")) line-end)
-    :tail-matcher (rx line-start (* space) (= 3 (char "\"'")) line-end)
-    :head-mode 'host
-    :tail-mode 'host
-    :allow-nested nil
-    :keep-in-mode 'host
-    :fallback-mode 'host)
-  (define-polymode poly-elixir-web-mode
-    :hostmode 'poly-elixir-hostmode
-    :innermodes '(poly-liveview-expr-elixir-innermode)))
+  (set-ligatures! 'elixir-ts-mode
+                  ;; Functional
+                  :def "def"
+                  :lambda "fn"
+                  ;; :src_block "do"
+                  ;; :src_block_end "end"
+                  ;; Flow
+                  :not "!"
+                  :in "in" :not-in "not in"
+                  :and "and" :or "or"
+                  :for "for"
+                  :return "return" :yield "use")
+
+  ;; ...and only complete the basics
+  (sp-with-modes 'elixir-ts-mode
+    (sp-local-pair "do" "end"
+                   :when '(("RET" "<evil-ret>"))
+                   :unless '(sp-in-comment-p sp-in-string-p)
+                   :post-handlers '("||\n[i]"))
+    (sp-local-pair "do " " end" :unless '(sp-in-comment-p sp-in-string-p))
+    (sp-local-pair "fn " " end" :unless '(sp-in-comment-p sp-in-string-p)))
+
+  (when (modulep! :lang elixir +lsp)
+    (add-hook 'elixir-ts-mode-local-vars-hook #'lsp! 'append)
+    (after! lsp-mode
+      (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]_build\\'")))
+
+  ;; (when (modulep! +tree-sitter)
+  ;;   (add-hook 'elixir-ts-mode-local-vars-hook #'tree-sitter! 'append))
+
+  (after! highlight-numbers
+    (puthash 'elixir-ts-mode
+             "\\_<-?[[:digit:]]+\\(?:_[[:digit:]]\\{3\\}\\)*\\_>"
+             highlight-numbers-modelist)))
+
+(use-package! flycheck-credo
+  :when (and (modulep! :checkers syntax)
+             (not (modulep! :checkers syntax +flymake)))
+  :after elixir-ts-mode
+  :config (flycheck-credo-setup))
+
+
+(use-package! exunit
+  :hook (elixir-ts-mode . exunit-mode)
+  :init
+  (map! :after elixir-ts-mode
+        :localleader
+        :map elixir-ts-mode-map
+        :prefix ("t" . "test")
+        "a" #'exunit-verify-all
+        "r" #'exunit-rerun
+        "v" #'exunit-verify
+        "T" #'exunit-toggle-file-and-test
+        "t" #'exunit-toggle-file-and-test-other-window
+        "s" #'exunit-verify-single))
 #+end_src
 
 **** DOOM hacks
@@ -627,10 +672,11 @@ LSP will try to look in all directories within out project. This is a lot of fil
 LSP lens will provide suggested typespecs. This is nice, but I find it adds a fair amount of noise and the delay in updating it can make it sort of confusing when updating function definitions. As a result, I want to default to it being off when working in Elixir.
 
 #+begin_src elisp
-(after! elixir-mode
+(after! elixir-ts-mode
   (after! lsp-mode
     (setq lsp-lens-enable nil)))
 #+end_src
+
 ***** Formatting
 As of <2023-03-10 Fri> I am having issues with having LSP formatting, it keeps claiming there are syntax errors even though =mix format= works. I am going to tell DOOM to not use LSP for formatting for now.
 
@@ -645,11 +691,25 @@ I think this falls back to the =elixir-format= function from ~emacs-elixir~ whic
 Out of the box, DOOM provides bindings for most functions provided by [[https://github.com/ananthakumaran/exunit.el][exunit.el]]. One that it does not provide is ~exunit-debug~ (using IEx to run the test, so you can use ~IEx.pry~).
 
 #+begin_src elisp
-(map! :after elixir-mode
+(map! :after elixir-ts-mode
     :localleader
-    :map elixir-mode-map
-    :prefix "t"
+    :map elixir-mode-ts-map
+    :prefix ("t" . "test")
     "d" #'exunit-debug)
+#+end_src
+**** Mix
+
+Enable [[https://github.com/ayrat555/mix.el][mix minor mode]] on Elixir mode. This is not included in the DOOM module and is added via ~packages.el~.
+
+#+begin_src elisp
+(use-package! mix
+  :hook (elixir-ts-mode . mix-minor-mode)
+  :init
+  (map! :after elixir-ts-mode
+        :localleader
+        :map elixir-ts-mode-map
+        :prefix ("m" . "mix")
+        "m" #'mix-execute-task))
 #+end_src
 
 *** Ruby
