@@ -685,6 +685,15 @@ As of <2023-03-10 Fri> I am having issues with having LSP formatting, it keeps c
 #+end_src
 
 I think this falls back to the =elixir-format= function from ~emacs-elixir~ which /seems/ to work more reliably.
+***** Next LS
+#+begin_src elisp
+(after! lsp-mode
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("nextls" "--stdio"))
+                    :multi-root t
+                    :activation-fn (lsp-activate-on "elixir")
+                    :server-id 'next-ls)))
+#+end_src
 
 **** ExUnit
 
