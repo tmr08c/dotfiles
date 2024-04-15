@@ -527,7 +527,35 @@ Configuration tied to specific languages or modes.
         ;; Highlight the current element
         web-mode-enable-current-element-highlight t))
 #+end_src
+**** tree-sitter
+#+begin_src elisp
+(setq +tree-sitter-hl-enabled-modes t)
+#+end_src
 
+#+begin_src elisp
+;; (setq treesit-language-source-alist
+;;       '((tsx        "https://github.com/tree-sitter/tree-sitter-typescript"
+;;                     "v0.20.3"
+;;                     "tsx/src")
+;;         (typescript "https://github.com/tree-sitter/tree-sitter-typescript"
+;;                     "v0.20.3"
+;;                     "typescript/src")))
+#+end_src
+
+#+begin_src elisp
+;; (defun typescript-tsx-mode-fix-tree-sitter()
+;;    (set (make-local-variable 'tree-sitter-hl-use-font-lock-keywords) nil))
+;; (add-hook 'typescript-tsx-mode-hook #'typescript-tsx-mode-fix-tree-sitter)
+#+end_src
+
+Let's use the newer tressiter modes for typescript and TSX
+#+begin_src elisp
+(use-package typescript-ts-mode
+  :mode (("\\.ts\\'" . typescript-ts-mode)
+         ("\\.tsx\\'" . tsx-ts-mode))
+  :config
+  (add-hook! '(typescript-ts-mode-hook tsx-ts-mode-hook) #'lsp!))
+#+end_src
 *** Elixir
 
 ;; (defun tr/flycheck-dialyxir-setup ()
