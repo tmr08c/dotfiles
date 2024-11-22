@@ -567,7 +567,7 @@ Configuration tied to specific languages or modes.
 ;;               (setq my-flycheck-local-cache '((next-checkers . (tex-chktex)))))))
 
 **** Elixir (TS) Mode
-The current DOOM module (<2024-04-13 Sat>). Using the DOOM module config as the base and [[https://github.com/cullan/doom-elixir-ts][this repo]] as inspiration, set up [[https://github.com/wkirschbaum/elixir-ts-mode][elixir-ts-mode]].
+The current DOOM module (<2024-04-13 Sat>) sets up =elixir-mode= which provides syntax highlighting without tree-sitter. While the tree-sitter module includes elixir bindings, I /think/ the =elixir-mode= highlighting is still doing it's thing. I am using the DOOM module config as the base and [[https://github.com/cullan/doom-elixir-ts][this repo]] as inspiration to set up the same module config, but hook into [[https://github.com/wkirschbaum/elixir-ts-mode][elixir-ts-mode]] (which I install in ~packages.el~)
 
 #+begin_src elisp
 (use-package! elixir-ts-mode
@@ -685,7 +685,10 @@ As of <2023-03-10 Fri> I am having issues with having LSP formatting, it keeps c
 #+end_src
 
 I think this falls back to the =elixir-format= function from ~emacs-elixir~ which /seems/ to work more reliably.
-***** Next LS
+***** Next LS :experiment:
+
+I am experimenting with using [[https://www.elixir-tools.dev/docs/next-ls/quickstart/][next-ls]] as the language server for Elixir. It is earlier in the development cycle, but seems to have most of the features I am using (even if competition is considered experimental).
+
 #+begin_src elisp
 (after! lsp-mode
   (lsp-register-client
