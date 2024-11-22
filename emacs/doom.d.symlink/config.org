@@ -627,6 +627,8 @@ The current DOOM module (<2024-04-13 Sat>) sets up =elixir-mode= which provides 
         :map elixir-ts-mode-map
         :prefix ("t" . "test")
         "a" #'exunit-verify-all
+        ;; WARNING: This was added by me
+        "d" #'exunit-debug
         "r" #'exunit-rerun
         "v" #'exunit-verify
         "T" #'exunit-toggle-file-and-test
