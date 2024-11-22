@@ -2,7 +2,7 @@
 
 echo "Setting up asdf"
 
-array=(direnv erlang elixir golang julia nodejs python ruby rust zig)
+array=(direnv erlang elixir golang julia nodejs python ruby rust typos zig)
 for lang in "${array[@]}"; do
     echo "Adding plugin for '$lang'"
     asdf plugin add $lang
