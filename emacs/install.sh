@@ -2,7 +2,7 @@
 # Set up DOOM emacs
 
 # Put Emacs into the Applications directory so we can launch in from Finder
-osascript -e 'tell application "Finder" to make alias file to posix file "/opt/homebrew/opt/emacs-plus@29/Emacs.app" at POSIX file "/Applications"'
+osascript -e 'tell application "Finder" to make alias file to posix file "/opt/homebrew/opt/emacs-plus@29/Emacs.app" at posix file "/Applications" with properties {name:"Emacs.app"}'
 
 # Have Emacs managed by brew services to start up
 brew services start d12frosted/emacs-plus/emacs-plus@29
