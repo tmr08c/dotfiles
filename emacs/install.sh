@@ -12,3 +12,5 @@ brew services start d12frosted/emacs-plus/emacs-plus@29
 ~/.emacs.d/bin/doom install --force
 # Sync should do the heavy lifting of install and compiling packages.
 ~/.emacs.d/bin/doom sync
+
+exit 0;

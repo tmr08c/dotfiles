@@ -10,3 +10,5 @@ for lang in "${array[@]}"; do
     asdf install $lang latest
     asdf global $lang latest
 done
+
+exit 0;
