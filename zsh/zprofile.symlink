@@ -1,6 +1,6 @@
-# Set PATH, MANPATH, etc., for Homebrew.
-# This is only necessary for Macs using Apple Silicon, but, but since I work on
-# both architectures, I need to check the path first.
+# Set PATH, MANPATH, etc., for Homebrew.  This is only necessary for Macs using
+# Apple Silicon, but, since I work on both architectures, I need to check the
+# path first.
 #
 # See https://github.com/Homebrew/brew/issues/9177 for more background
 [ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
