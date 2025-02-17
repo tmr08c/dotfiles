@@ -9,3 +9,9 @@
 # environments, including [spawned solargraph
 # processes](https://github.com/neoclide/coc-solargraph/issues/12)
 [ -f $(brew --prefix asdf)/libexec/asdf.sh ] && source $(brew --prefix asdf)/libexec/asdf.sh
+
+# Run script to remap caps lock to control
+#
+# At the time of writing (2025-02-17) there doesn't appear to be a way to manage
+# this with `defaults` and this is one of the easiest ways to do this.
+~/.dotfiles/macos/remap_capslock.sh
