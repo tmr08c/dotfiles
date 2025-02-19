@@ -15,7 +15,7 @@ defaults write com.apple.NetworkBrowser BrowseAllInterfaces 1
 
 # Setting up default Finder view style
 # Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv`
-defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
+defaults write com.apple.finder FXPreferredViewStyle clmv
 
 # Show the ~/Library folder.
 chflags nohidden ~/Library
@@ -46,6 +46,8 @@ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 # Avoid creating .DS_Store files on network or USB volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+killall Finder
 
 ###############################################################################
 # Dock, Dashboard, and hot corners                                            #
