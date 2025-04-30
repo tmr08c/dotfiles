@@ -73,6 +73,9 @@ defaults write com.apple.dock magnification -bool true
 defaults write com.apple.dock tilesize -int 16
 defaults write com.apple.dock largesize -int 128
 
+# Set the preference to prevent automatic rearrangement of spaces
+defaults write com.apple.dock mru-spaces -bool false
+
 # Kill the Dock for changes to take effect
 killall Dock
 
