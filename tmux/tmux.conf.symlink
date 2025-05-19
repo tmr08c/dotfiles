@@ -3,13 +3,20 @@ setw -g mouse on
 
 # Terminal type config
 
-# Help with colors
-set -g default-terminal "xterm-kitty"
-# Allow xterm titles in terminal window, terminal scrolling with scrollbar
-set -ga terminal-overrides ',xterm-256color:Tc:smcup@:rmcup@'
+# Enable true color support
+set -g default-terminal "tmux-256color"
+set -ga terminal-overrides ',*:Tc'
 
-# Scroll History
-set -g history-limit 100000
+# Fix colors for various terminals
+set -ga terminal-overrides ',xterm-256color:RGB'
+set -ga terminal-overrides ',screen-256color:RGB'
+set -ga terminal-overrides ',xterm-kitty:RGB'
+
+# Allow xterm titles in terminal window, terminal scrolling with scrollbar
+set -ga terminal-overrides ',xterm*:smcup@:rmcup@'
+
+# Scroll History - maximum possible
+set -g history-limit 1000000
 
 # Set ability to capture on start and restore on exit window data when running an application
 setw -g alternate-screen on
@@ -33,8 +40,7 @@ setw -g pane-base-index 1
 # Status Bar Settings
 
 # Color of bar
-set-window-option -g window-status-current-fg black
-set-window-option -g window-status-current-bg green
+set-window-option -g window-status-current-style fg=black,bg=green
 
 # Left Side Display
 
@@ -44,10 +50,8 @@ set-option -g status-left-length 50
 # Right Side Display
 set-option -g status-right " #(date '+%a, %b %d - %I:%M %p') "
 
-set -g pane-border-fg colour235
-set -g pane-border-bg black
-set -g pane-active-border-fg green
-set -g pane-active-border-bg black
+set -g pane-border-style fg=colour235,bg=black
+set -g pane-active-border-style fg=green,bg=black
 
 # Smart pane switching with awareness of vim splits
 # https://github.com/christoomey/vim-tmux-navigator
@@ -57,24 +61,33 @@ bind -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
 bind -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
 bind -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
 
-bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+bind -n C-\\ if-shell "$is_vim" "send-keys C-\\\\" "select-pane -l"
 
 # Use vim keybindings in copy mode
 setw -g mode-keys vi
 
-# Vi copypaste
-setw -g mode-keys vi
+# Vi copypaste with more familiar keybindings
 bind-key -T copy-mode-vi v send-keys -X begin-selection
-bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
+bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+bind-key -T copy-mode-vi Escape send-keys -X cancel
 
-# TPM
-# https://github.com/tmux-plugins/tpm
+# macOS clipboard integration
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
 
-# List of plugins
-set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-yank'
-set -g @plugin 'tmux-plugins/tmux-resurrect'
+# Additional vim-like keybindings
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
 
-# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run -b '~/.tmux/plugins/tpm/tpm'
+# Enter copy mode with Prefix + [
+bind [ copy-mode
+
+# Paste from system clipboard with Prefix + p
+bind p run-shell "pbpaste | tmux load-buffer - && tmux paste-buffer"
