@@ -23,6 +23,7 @@ brew "freetype"
 brew "libevent"
 brew "gnutls"
 brew "cask"
+brew "claude-squad"
 brew "cloc"
 brew "cmake"
 brew "ctags", link: false
