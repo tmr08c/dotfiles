@@ -1,0 +1,4 @@
+# Auto-allow .envrc files in specific paths
+# Be careful with this - only use for trusted directories
+[whitelist]
+prefix = ["~/.claude-squad/worktrees"]
