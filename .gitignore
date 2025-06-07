@@ -12,3 +12,5 @@ config.symlink/nvim/.netrwhist
 config.symlink/asdf-direnv/zshrc
 
 node_modules
+
+**/.claude/settings.local.json
