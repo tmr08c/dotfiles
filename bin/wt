@@ -1,0 +1,234 @@
+#!/usr/bin/env bash
+
+# Git worktree management script
+# Creates and manages git worktrees in ~/.worktrees/PROJECT/BRANCH
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_error() {
+    echo -e "${RED}Error: $1${NC}" >&2
+}
+
+print_success() {
+    echo -e "${GREEN}Success: $1${NC}"
+}
+
+print_info() {
+    echo -e "${BLUE}Info: $1${NC}"
+}
+
+# Function to get the project name from the git repository
+get_project_name() {
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -z "$git_root" ]]; then
+        print_error "Not in a git repository"
+        exit 1
+    fi
+    basename "$git_root"
+}
+
+# Function to ensure directory exists
+ensure_directory() {
+    local dir="$1"
+    if [[ ! -d "$dir" ]]; then
+        mkdir -p "$dir"
+        print_info "Created directory: $dir"
+    fi
+}
+
+# Function to create a new worktree
+create_worktree() {
+    local branch_name="$1"
+    
+    if [[ -z "$branch_name" ]]; then
+        print_error "Branch name is required"
+        echo "Usage: wt new <branch-name>"
+        exit 1
+    fi
+    
+    # Get project name
+    local project_name=$(get_project_name)
+    
+    # Define worktree path
+    local worktree_base="$HOME/.worktrees"
+    local project_dir="$worktree_base/$project_name"
+    local worktree_path="$project_dir/$branch_name"
+    
+    # Ensure directories exist
+    ensure_directory "$worktree_base"
+    ensure_directory "$project_dir"
+    
+    # Check if worktree already exists
+    if [[ -d "$worktree_path" ]]; then
+        print_error "Worktree already exists at: $worktree_path"
+        exit 1
+    fi
+    
+    # Check if branch already exists
+    if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        print_error "Branch '$branch_name' already exists"
+        echo "Use 'wt checkout $branch_name' to create a worktree for an existing branch"
+        exit 1
+    fi
+    
+    # Create the worktree with a new branch
+    print_info "Creating worktree for new branch '$branch_name'..."
+    git worktree add -b "$branch_name" "$worktree_path"
+    
+    print_success "Created worktree at: $worktree_path"
+    print_info "To navigate to the worktree, run:"
+    echo "  cd $worktree_path"
+}
+
+# Function to list worktrees
+list_worktrees() {
+    local project_name=$(get_project_name)
+    local worktree_base="$HOME/.worktrees"
+    local project_dir="$worktree_base/$project_name"
+    
+    print_info "Worktrees for project '$project_name':"
+    
+    if [[ ! -d "$project_dir" ]]; then
+        echo "  No worktrees found"
+        return
+    fi
+    
+    # Use git worktree list to get accurate information
+    git worktree list | while IFS= read -r line; do
+        if [[ "$line" == *"$project_dir"* ]]; then
+            echo "  $line"
+        fi
+    done
+}
+
+# Function to remove a worktree
+remove_worktree() {
+    local branch_name="$1"
+    
+    if [[ -z "$branch_name" ]]; then
+        print_error "Branch name is required"
+        echo "Usage: wt remove <branch-name>"
+        exit 1
+    fi
+    
+    local project_name=$(get_project_name)
+    local worktree_path="$HOME/.worktrees/$project_name/$branch_name"
+    
+    if [[ ! -d "$worktree_path" ]]; then
+        print_error "Worktree not found at: $worktree_path"
+        exit 1
+    fi
+    
+    print_info "Removing worktree at: $worktree_path"
+    git worktree remove "$worktree_path"
+    
+    print_success "Removed worktree for branch '$branch_name'"
+}
+
+# Function to checkout an existing branch into a new worktree
+checkout_worktree() {
+    local branch_name="$1"
+    
+    if [[ -z "$branch_name" ]]; then
+        print_error "Branch name is required"
+        echo "Usage: wt checkout <branch-name>"
+        exit 1
+    fi
+    
+    # Get project name
+    local project_name=$(get_project_name)
+    
+    # Define worktree path
+    local worktree_base="$HOME/.worktrees"
+    local project_dir="$worktree_base/$project_name"
+    local worktree_path="$project_dir/$branch_name"
+    
+    # Ensure directories exist
+    ensure_directory "$worktree_base"
+    ensure_directory "$project_dir"
+    
+    # Check if worktree already exists
+    if [[ -d "$worktree_path" ]]; then
+        print_error "Worktree already exists at: $worktree_path"
+        exit 1
+    fi
+    
+    # Check if branch exists
+    if ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        print_error "Branch '$branch_name' does not exist"
+        echo "Use 'wt new $branch_name' to create a new branch"
+        exit 1
+    fi
+    
+    # Create the worktree for existing branch
+    print_info "Creating worktree for existing branch '$branch_name'..."
+    git worktree add "$worktree_path" "$branch_name"
+    
+    print_success "Created worktree at: $worktree_path"
+    print_info "To navigate to the worktree, run:"
+    echo "  cd $worktree_path"
+}
+
+# Function to show help
+show_help() {
+    cat << EOF
+Git Worktree Manager (wt)
+
+A script to manage git worktrees more easily. Worktrees are created in:
+  ~/.worktrees/PROJECT/BRANCH
+
+Commands:
+  wt new <branch-name>      Create a new branch and worktree
+  wt checkout <branch-name> Create a worktree for an existing branch
+  wt list                   List all worktrees for the current project
+  wt remove <branch-name>   Remove a worktree
+  wt help                   Show this help message
+
+Examples:
+  # Create a new branch 'feature-xyz' with a worktree
+  wt new feature-xyz
+
+  # Create a worktree for existing branch 'main'
+  wt checkout main
+
+  # List all worktrees for current project
+  wt list
+
+  # Remove the worktree for branch 'old-feature'
+  wt remove old-feature
+EOF
+}
+
+# Main script logic
+case "${1:-}" in
+    new)
+        create_worktree "$2"
+        ;;
+    checkout)
+        checkout_worktree "$2"
+        ;;
+    list)
+        list_worktrees
+        ;;
+    remove)
+        remove_worktree "$2"
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    *)
+        if [[ -n "${1:-}" ]]; then
+            print_error "Unknown command: $1"
+        fi
+        show_help
+        exit 1
+        ;;
+esac
