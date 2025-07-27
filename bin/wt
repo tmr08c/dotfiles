@@ -112,14 +112,34 @@ list_worktrees() {
 # Function to remove a worktree
 remove_worktree() {
     local branch_name="$1"
+    local project_name=$(get_project_name)
+    local worktree_base="$HOME/.worktrees"
+    local project_dir="$worktree_base/$project_name"
     
-    if [[ -z "$branch_name" ]]; then
+    # If no branch name provided and fzf is available, use interactive selection
+    if [[ -z "$branch_name" ]] && command -v fzf >/dev/null 2>&1; then
+        # Get list of worktrees for this project
+        local worktrees=$(git worktree list --porcelain | grep "^worktree $project_dir" | cut -d' ' -f2- | sed "s|$project_dir/||")
+        
+        if [[ -z "$worktrees" ]]; then
+            print_error "No worktrees found for project '$project_name'"
+            exit 1
+        fi
+        
+        print_info "Select a worktree to remove:"
+        branch_name=$(echo "$worktrees" | fzf --height=40% --reverse --prompt="Select worktree to remove: ")
+        
+        if [[ -z "$branch_name" ]]; then
+            print_error "No worktree selected"
+            exit 1
+        fi
+    elif [[ -z "$branch_name" ]]; then
         print_error "Branch name is required"
         echo "Usage: wt remove <branch-name>"
+        echo "Note: Install fzf for interactive worktree selection"
         exit 1
     fi
     
-    local project_name=$(get_project_name)
     local worktree_path="$HOME/.worktrees/$project_name/$branch_name"
     
     if [[ ! -d "$worktree_path" ]]; then
@@ -137,9 +157,19 @@ remove_worktree() {
 checkout_worktree() {
     local branch_name="$1"
     
-    if [[ -z "$branch_name" ]]; then
+    # If no branch name provided and fzf is available, use interactive selection
+    if [[ -z "$branch_name" ]] && command -v fzf >/dev/null 2>&1; then
+        print_info "Select a branch to checkout:"
+        branch_name=$(git branch -a --format='%(refname:short)' | sed 's|^origin/||' | sort -u | fzf --height=40% --reverse --prompt="Select branch: ")
+        
+        if [[ -z "$branch_name" ]]; then
+            print_error "No branch selected"
+            exit 1
+        fi
+    elif [[ -z "$branch_name" ]]; then
         print_error "Branch name is required"
         echo "Usage: wt checkout <branch-name>"
+        echo "Note: Install fzf for interactive branch selection"
         exit 1
     fi
     
@@ -187,9 +217,11 @@ A script to manage git worktrees more easily. Worktrees are created in:
 
 Commands:
   wt new <branch-name>      Create a new branch and worktree
-  wt checkout <branch-name> Create a worktree for an existing branch
+  wt checkout [branch-name] Create a worktree for an existing branch
+                           (interactive selection with fzf if no branch specified)
   wt list                   List all worktrees for the current project
-  wt remove <branch-name>   Remove a worktree
+  wt remove [branch-name]   Remove a worktree
+                           (interactive selection with fzf if no branch specified)
   wt help                   Show this help message
 
 Examples:
@@ -199,11 +231,17 @@ Examples:
   # Create a worktree for existing branch 'main'
   wt checkout main
 
+  # Interactive branch selection with fzf (if installed)
+  wt checkout
+
   # List all worktrees for current project
   wt list
 
   # Remove the worktree for branch 'old-feature'
   wt remove old-feature
+
+  # Interactive worktree removal with fzf (if installed)
+  wt remove
 EOF
 }
 
