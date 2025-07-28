@@ -242,6 +242,15 @@ Examples:
 
   # Interactive worktree removal with fzf (if installed)
   wt remove
+
+Tab Completion:
+  The wt command supports tab completion for checkout and remove.
+  Source ~/.dotfiles/git/completion.zsh in your shell to enable.
+
+FZF Keybindings (optional):
+  Add these to your .zshrc for quick access:
+  bindkey '^G^W' fzf-wt-checkout-widget  # Ctrl-G Ctrl-W
+  bindkey '^G^X' fzf-wt-remove-widget   # Ctrl-G Ctrl-X
 EOF
 }
 
