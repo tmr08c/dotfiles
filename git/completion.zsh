@@ -135,6 +135,3 @@ if command -v fzf >/dev/null 2>&1; then
         # bindkey '^G^X' fzf-wt-remove-widget   # Ctrl-G Ctrl-X for worktree remove
     fi
 fi
-
-# Export functions for use in other scripts
-export -f __fzf_wt_checkout __fzf_wt_remove 2>/dev/null || true
