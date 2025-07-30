@@ -33,17 +33,11 @@ _wt() {
                     fi
                     ;;
                 remove)
-                    # Provide worktree completion
-                    local project_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
-                    local worktree_base="$HOME/.worktrees"
-                    local project_dir="$worktree_base/$project_name"
-                    
-                    if [[ -d "$project_dir" ]]; then
-                        local worktrees
-                        worktrees=(${(f)"$(git worktree list --porcelain 2>/dev/null | grep "^worktree $project_dir" | cut -d' ' -f2- | sed "s|$project_dir/||")"})
-                        if [[ -n "$worktrees" ]]; then
-                            _describe -t worktrees 'worktree' worktrees
-                        fi
+                    # Provide branch names from existing worktrees
+                    local branches
+                    branches=(${(f)"$(git worktree list --porcelain 2>/dev/null | grep "^branch" | sed 's/branch refs\/heads\///')"})
+                    if [[ -n "$branches" ]]; then
+                        _describe -t branches 'worktree branch' branches
                     fi
                     ;;
                 new)
@@ -81,28 +75,22 @@ if command -v fzf >/dev/null 2>&1; then
     
     # Interactive worktree selection for wt remove
     __fzf_wt_remove() {
-        local project_name=$(basename "$(git rev-parse --show-toplevel 2>/dev/null)")
-        local project_dir="$HOME/.worktrees/$project_name"
-        
-        if [[ ! -d "$project_dir" ]]; then
-            echo "No worktrees found for project '$project_name'" >&2
-            return 1
-        fi
-        
+        # Get all worktrees (not just main)
         local worktrees
-        worktrees=$(git worktree list --porcelain 2>/dev/null | grep "^worktree $project_dir" | cut -d' ' -f2- | sed "s|$project_dir/||")
+        worktrees=$(git worktree list | grep -v '(bare)' | tail -n +2)
         
         if [[ -z "$worktrees" ]]; then
-            echo "No worktrees found for project '$project_name'" >&2
+            echo "No additional worktrees found" >&2
             return 1
         fi
         
+        # Show worktree list with path and branch info
         echo "$worktrees" | fzf \
             --height=40% \
             --reverse \
-            --preview "echo 'Worktree: {}' && echo '---' && cd '$project_dir/{}' && git status --short && echo '---' && ls -la | head -20" \
+            --preview 'echo "Path: {1}" && echo "Branch: {3}" && echo "---" && cd {1} && git status --short && echo "---" && ls -la | head -20' \
             --preview-window=right:50% \
-            --header="Select worktree to remove"
+            --header="Select worktree to remove" | awk '{print $1}'
     }
     
     # Widget functions for ZLE (Zsh Line Editor)

@@ -91,48 +91,34 @@ create_worktree() {
 # Function to list worktrees
 list_worktrees() {
     local project_name=$(get_project_name)
-    local worktree_base="$HOME/.worktrees"
-    local project_dir="$worktree_base/$project_name"
     
     print_info "Worktrees for project '$project_name':"
     
-    if [[ ! -d "$project_dir" ]]; then
-        echo "  No worktrees found"
-        return
-    fi
-    
-    # Use git worktree list to get accurate information
-    git worktree list | while IFS= read -r line; do
-        if [[ "$line" == *"$project_dir"* ]]; then
-            echo "  $line"
-        fi
-    done
+    # Use git worktree list to show all worktrees
+    git worktree list
 }
 
 # Function to remove a worktree
 remove_worktree() {
     local branch_name="$1"
     local project_name=$(get_project_name)
-    local worktree_base="$HOME/.worktrees"
-    local project_dir="$worktree_base/$project_name"
     
     # If no branch name provided and fzf is available, use interactive selection
     if [[ -z "$branch_name" ]] && command -v fzf >/dev/null 2>&1; then
-        # Get list of worktrees for this project
-        local worktrees=$(git worktree list --porcelain | grep "^worktree $project_dir" | cut -d' ' -f2- | sed "s|$project_dir/||")
-        
-        if [[ -z "$worktrees" ]]; then
-            print_error "No worktrees found for project '$project_name'"
-            exit 1
-        fi
-        
+        # Get all worktrees and let user select
         print_info "Select a worktree to remove:"
-        branch_name=$(echo "$worktrees" | fzf --height=40% --reverse --prompt="Select worktree to remove: ")
+        local selected=$(git worktree list | fzf --height=40% --reverse --prompt="Select worktree to remove: " | awk '{print $1}')
         
-        if [[ -z "$branch_name" ]]; then
+        if [[ -z "$selected" ]]; then
             print_error "No worktree selected"
             exit 1
         fi
+        
+        # Use the selected path directly
+        print_info "Removing worktree at: $selected"
+        git worktree remove "$selected"
+        print_success "Removed worktree"
+        return 0
     elif [[ -z "$branch_name" ]]; then
         print_error "Branch name is required"
         echo "Usage: wt remove <branch-name>"
@@ -140,11 +126,23 @@ remove_worktree() {
         exit 1
     fi
     
-    local worktree_path="$HOME/.worktrees/$project_name/$branch_name"
+    # If branch name provided, try to find the worktree
+    local worktree_path=""
     
-    if [[ ! -d "$worktree_path" ]]; then
-        print_error "Worktree not found at: $worktree_path"
-        exit 1
+    # First, check our standard location
+    local standard_path="$HOME/.worktrees/$project_name/$branch_name"
+    if [[ -d "$standard_path" ]]; then
+        worktree_path="$standard_path"
+    else
+        # Try to find the worktree by branch name
+        worktree_path=$(git worktree list --porcelain | grep -A1 "branch.*/$branch_name$" | grep "^worktree" | cut -d' ' -f2)
+        
+        if [[ -z "$worktree_path" ]]; then
+            print_error "No worktree found for branch '$branch_name'"
+            echo "Available worktrees:"
+            git worktree list
+            exit 1
+        fi
     fi
     
     print_info "Removing worktree at: $worktree_path"
