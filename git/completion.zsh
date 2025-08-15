@@ -1,5 +1,41 @@
 # Git worktree completion with fzf integration
 
+# Shell function wrapper for wt command that handles directory changes
+wt() {
+    # If no arguments provided, just show help (don't process as directory-changing command)
+    if [[ $# -eq 0 ]]; then
+        command wt
+        return $?
+    fi
+    
+    case "${1:-}" in
+        new|checkout|visit)
+            # For commands that should change directory, capture the output and execute it
+            local output
+            output=$(command wt "$@")
+            local exit_code=$?
+            
+            # Print all output except the last line (which should be the cd command)
+            echo "$output" | head -n -1
+            
+            # Execute the last line if it's a cd command and the script succeeded
+            if [[ $exit_code -eq 0 ]]; then
+                local last_line
+                last_line=$(echo "$output" | tail -n 1)
+                if [[ "$last_line" =~ ^cd ]]; then
+                    eval "$last_line"
+                fi
+            fi
+            
+            return $exit_code
+            ;;
+        *)
+            # For other commands, just pass through to the original script
+            command wt "$@"
+            ;;
+    esac
+}
+
 # Standard zsh completion for wt command
 _wt() {
     local -a commands
@@ -8,6 +44,7 @@ _wt() {
         'checkout:Create a worktree for an existing branch'
         'list:List all worktrees for the current project'
         'remove:Remove a worktree'
+        'visit:Change directory to a worktree'
         'help:Show help message'
     )
 
@@ -32,7 +69,7 @@ _wt() {
                         _describe -t branches 'branch' branches
                     fi
                     ;;
-                remove)
+                remove|visit)
                     # Provide branch names from existing worktrees
                     local branches
                     branches=(${(f)"$(git worktree list --porcelain 2>/dev/null | grep "^branch" | sed 's/branch refs\/heads\///')"})
@@ -93,6 +130,26 @@ if command -v fzf >/dev/null 2>&1; then
             --header="Select worktree to remove" | awk '{print $1}'
     }
     
+    # Interactive worktree selection for wt visit
+    __fzf_wt_visit() {
+        # Get all worktrees
+        local worktrees
+        worktrees=$(git worktree list | grep -v '(bare)')
+        
+        if [[ -z "$worktrees" ]]; then
+            echo "No worktrees found" >&2
+            return 1
+        fi
+        
+        # Show worktree list with path and branch info
+        echo "$worktrees" | fzf \
+            --height=40% \
+            --reverse \
+            --preview 'echo "Path: {1}" && echo "Branch: {3}" && echo "---" && cd {1} && git status --short && echo "---" && ls -la | head -20' \
+            --preview-window=right:50% \
+            --header="Select worktree to visit" | awk '{print $1}'
+    }
+    
     # Widget functions for ZLE (Zsh Line Editor)
     fzf-wt-checkout-widget() {
         local selected
@@ -112,14 +169,27 @@ if command -v fzf >/dev/null 2>&1; then
         zle reset-prompt
     }
     
+    fzf-wt-visit-widget() {
+        local selected
+        selected=$(__fzf_wt_visit)
+        if [[ -n "$selected" ]]; then
+            # Execute the cd command directly
+            cd "$selected"
+            zle accept-line
+        fi
+        zle reset-prompt
+    }
+    
     # Register widgets if in interactive zsh
     if [[ -n "$ZSH_VERSION" ]] && [[ $- == *i* ]]; then
         zle -N fzf-wt-checkout-widget
         zle -N fzf-wt-remove-widget
+        zle -N fzf-wt-visit-widget
         
         # Optional: Bind to specific key combinations
         # Users can add these to their .zshrc if desired:
         # bindkey '^G^W' fzf-wt-checkout-widget  # Ctrl-G Ctrl-W for worktree checkout
         # bindkey '^G^X' fzf-wt-remove-widget   # Ctrl-G Ctrl-X for worktree remove
+        # bindkey '^G^V' fzf-wt-visit-widget    # Ctrl-G Ctrl-V for worktree visit
     fi
 fi
