@@ -15,16 +15,26 @@ wt() {
             output=$(command wt "$@")
             local exit_code=$?
             
-            # Print all output except the last line (which should be the cd command)
-            echo "$output" | head -n -1
-            
-            # Execute the last line if it's a cd command and the script succeeded
-            if [[ $exit_code -eq 0 ]]; then
+            # Only process output if there is any and the command succeeded
+            if [[ $exit_code -eq 0 ]] && [[ -n "$output" ]]; then
                 local last_line
                 last_line=$(echo "$output" | tail -n 1)
                 if [[ "$last_line" =~ ^cd ]]; then
+                    # Print all output except the last line (which is the cd command)
+                    # Use a safer approach to remove the last line
+                    local line_count=$(echo "$output" | wc -l | tr -d ' ')
+                    if [[ "$line_count" -gt 1 ]]; then
+                        echo "$output" | sed '$d'  # Remove last line using sed
+                    fi
+                    # Execute the cd command
                     eval "$last_line"
+                else
+                    # No cd command found, just print all output
+                    echo "$output"
                 fi
+            else
+                # Command failed or no output, print any output that exists
+                [[ -n "$output" ]] && echo "$output"
             fi
             
             return $exit_code
