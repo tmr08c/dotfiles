@@ -99,6 +99,14 @@ Default to word-wrapping everywhere
 #+begin_src elisp
 (setq global-visual-line-mode t)
 #+end_src
+* Editor
+** Evil
+*** Alternative escape key
+DOOM [[https://github.com/doomemacs/doomemacs/commit/68ec9e9c86009623ced5849343534bced2e6fcd3][removed `jk`]] as the default escape sequence, but [[https://tmr08c.github.io/2022/10/alt-escape-vim/][I found I liked it]], so this re-enabled it.
+
+#+begin_src elisp
+(setq evil-escape-key-sequence "jk")
+#+end_src
 
 * Applications
 ** org-mode
