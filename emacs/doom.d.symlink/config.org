@@ -625,20 +625,95 @@ As of <2023-03-10 Fri> I am having issues with having LSP formatting, it keeps c
 #+end_src
 
 I think this falls back to the =elixir-format= function from ~emacs-elixir~ which /seems/ to work more reliably.
-***** Next LS :experiment:
+***** Explorer :experiement:
+  Trying to be an early adopter (as of <2025-11-19 Wed>) of the official Elixir LSP, [[https://github.com/elixir-lang/expert][Expert]].
 
-I am experimenting with using [[https://www.elixir-tools.dev/docs/next-ls/quickstart/][next-ls]] as the language server for Elixir. It is earlier in the development cycle, but seems to have most of the features I am using (even if competition is considered experimental).
+  For now, this requires pulling down a nightly release. To make this as bit easier, and to potentially work with tagged version releases in the future, let's set up some helpers to find and fetch the proper release from GitHub. We will even check if we can have Expert on our path and suggest downloading it if we don't.
 
 #+begin_src elisp
-(after! lsp-mode
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("nextls" "--stdio"))
-                    :multi-root t
-                    :initialization-options '(:experimental (:completions (:enable t))) ;; Enable the experimental completion mode
-                    :activation-fn (lsp-activate-on "elixir")
-                    :server-id 'next-ls)))
+(defcustom tr/explorer-ls-version "latest"
+  "Version of Explorer language server to download.
+Can be a specific version string (e.g., \"v0.1.0\") or \"latest\"."
+  :type 'string
+  :group 'elixir)
+
+(defun tr/get-explorer-download-url ()
+  "Return download URL and binary name for current system."
+  (let* ((version (if (string= tr/explorer-ls-version "latest")
+                      "nightly"
+                      (concat "tags/" tr/explorer-ls-version)))
+         (base-url (format "https://github.com/elixir-lang/expert/releases/download/%s/" version)))
+    (cond
+     ;; macOS ARM (M1/M2/M3)
+     ((and (eq system-type 'darwin)
+           (string-match-p "arm64\\|aarch64" (shell-command-to-string "uname -m")))
+      (list :binary "expert_darwin_arm64" :url (concat base-url "expert_darwin_arm64")))
+
+     ;; macOS Intel
+     ((eq system-type 'darwin)
+      (list :binary "expert_darwin_amd64" :url (concat base-url "expert_darwin_amd64")))
+
+     ;; Windows
+     ((eq system-type 'windows-nt)
+      (list :binary "expert_windows_amd64.exe" :url (concat base-url "expert_windows_amd64.exe")))
+
+     ;; Linux (default)
+     (t
+      (list :binary "expert_linux_amd64" :url (concat base-url "expert_linux_amd64"))))))
+
+(defun tr/ensure-explorer-installed ()
+  "Check if Explorer is installed and prompt to install if not."
+  (unless (or (executable-find "expert_linux_amd64")
+              (executable-find "expert_darwin_amd64")
+              (executable-find "expert_darwin_arm64")
+              (executable-find "expert_windows_amd64"))
+    (when (y-or-n-p "Explorer language server not found. Install it?")
+      (let* ((download-info (tr/get-explorer-download-url))
+             (binary-name (plist-get download-info :binary))
+             (download-url (plist-get download-info :url))
+             (install-dir (expand-file-name "~/.local/bin"))
+             (binary-path (expand-file-name binary-name install-dir)))
+        (unless (file-directory-p install-dir)
+          (make-directory install-dir t))
+        (message "Downloading Explorer...")
+        (url-copy-file download-url binary-path t)
+        (set-file-modes binary-path #o755)
+        (message "Explorer installed to %s. Please ensure %s is in your PATH." binary-path install-dir)))))
+
+(defun tr/update-explorer ()
+  "Update Explorer language server to the latest nightly build."
+  (interactive)
+  (let* ((download-info (tr/get-explorer-download-url))
+         (binary-name (plist-get download-info :binary))
+         (download-url (plist-get download-info :url))
+         (install-dir (expand-file-name "~/.local/bin"))
+         (binary-path (expand-file-name binary-name install-dir)))
+    (when (y-or-n-p "Update Explorer to latest nightly build? ")
+      (message "Downloading latest Explorer...")
+      (when (file-exists-p binary-path)
+        (delete-file binary-path))
+      (url-copy-file download-url binary-path t)
+      (set-file-modes binary-path #o755)
+      (message "Explorer updated to latest nightly build at %s" binary-path))))
+
+;; Hook to check for Explorer when opening Elixir files
+(add-hook 'elixir-mode-hook #'tr/ensure-explorer-installed)
+(add-hook 'elixir-ts-mode-hook #'tr/ensure-explorer-installed)
 #+end_src
 
+Now, let's tell ~eglot~ to use our expert binary.
+
+#+begin_src elisp
+(with-eval-after-load 'eglot
+  (setf (alist-get '(elixir-mode elixir-ts-mode heex-ts-mode)
+                   eglot-server-programs
+                   nil nil #'equal)
+        (if (and (fboundp 'w32-shell-dos-semantics)
+                 (w32-shell-dos-semantics))
+            '("expert_windows_amd64")
+          (eglot-alternatives
+           '("expert_linux_amd64" ("expert_darwin_arm64" "--stdio"))))))
+#+end_src
 **** ExUnit
 
 Out of the box, DOOM provides bindings for most functions provided by [[https://github.com/ananthakumaran/exunit.el][exunit.el]]. One that it does not provide is ~exunit-debug~ (using IEx to run the test, so you can use ~IEx.pry~).
