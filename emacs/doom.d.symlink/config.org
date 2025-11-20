@@ -590,14 +590,6 @@ I was finding that, for could cause a noticeable delay on first open. [[https://
 #+end_src
 
 **** LSP
-***** Formatting
-As of <2023-03-10 Fri> I am having issues with having LSP formatting, it keeps claiming there are syntax errors even though =mix format= works. I am going to tell DOOM to not use LSP for formatting for now.
-
-#+begin_src elisp
-(setq-hook! 'elixir-mode-hook +format-with-lsp nil)
-#+end_src
-
-I think this falls back to the =elixir-format= function from ~emacs-elixir~ which /seems/ to work more reliably.
 ***** Explorer :experiement:
   Trying to be an early adopter (as of <2025-11-19 Wed>) of the official Elixir LSP, [[https://github.com/elixir-lang/expert][Expert]].
 
