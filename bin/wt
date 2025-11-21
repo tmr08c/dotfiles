@@ -1,0 +1,338 @@
+#!/usr/bin/env bash
+
+# Git worktree management script
+# Creates and manages git worktrees in ~/.worktrees/PROJECT/BRANCH
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_error() {
+    echo -e "${RED}Error: $1${NC}" >&2
+}
+
+print_success() {
+    echo -e "${GREEN}Success: $1${NC}"
+}
+
+print_info() {
+    echo -e "${BLUE}Info: $1${NC}"
+}
+
+# Function to get the project name from the git repository
+get_project_name() {
+    local git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -z "$git_root" ]]; then
+        print_error "Not in a git repository"
+        exit 1
+    fi
+    basename "$git_root"
+}
+
+# Function to ensure directory exists
+ensure_directory() {
+    local dir="$1"
+    if [[ ! -d "$dir" ]]; then
+        mkdir -p "$dir"
+        print_info "Created directory: $dir"
+    fi
+}
+
+# Function to create a new worktree
+create_worktree() {
+    local branch_name="$1"
+    
+    if [[ -z "$branch_name" ]]; then
+        print_error "Branch name is required"
+        echo "Usage: wt new <branch-name>"
+        exit 1
+    fi
+    
+    # Get project name
+    local project_name=$(get_project_name)
+    
+    # Define worktree path
+    local worktree_base="$HOME/.worktrees"
+    local project_dir="$worktree_base/$project_name"
+    local worktree_path="$project_dir/$branch_name"
+    
+    # Ensure directories exist
+    ensure_directory "$worktree_base"
+    ensure_directory "$project_dir"
+    
+    # Check if worktree already exists
+    if [[ -d "$worktree_path" ]]; then
+        print_error "Worktree already exists at: $worktree_path"
+        exit 1
+    fi
+    
+    # Check if branch already exists
+    if git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        print_error "Branch '$branch_name' already exists"
+        echo "Use 'wt checkout $branch_name' to create a worktree for an existing branch"
+        exit 1
+    fi
+    
+    # Create the worktree with a new branch
+    print_info "Creating worktree for new branch '$branch_name'..."
+    git worktree add -b "$branch_name" "$worktree_path"
+    
+    print_success "Created worktree at: $worktree_path"
+    echo "cd \"$worktree_path\""
+}
+
+# Function to list worktrees
+list_worktrees() {
+    local project_name=$(get_project_name)
+    
+    print_info "Worktrees for project '$project_name':"
+    
+    # Use git worktree list to show all worktrees
+    git worktree list
+}
+
+# Function to remove a worktree
+remove_worktree() {
+    local branch_name="$1"
+    local project_name=$(get_project_name)
+    
+    # If no branch name provided and fzf is available, use interactive selection
+    if [[ -z "$branch_name" ]] && command -v fzf >/dev/null 2>&1; then
+        # Get all worktrees and let user select
+        print_info "Select a worktree to remove:"
+        local selected=$(git worktree list | fzf --height=40% --reverse --prompt="Select worktree to remove: " | awk '{print $1}')
+        
+        if [[ -z "$selected" ]]; then
+            print_error "No worktree selected"
+            exit 1
+        fi
+        
+        # Use the selected path directly
+        print_info "Removing worktree at: $selected"
+        git worktree remove "$selected"
+        print_success "Removed worktree"
+        return 0
+    elif [[ -z "$branch_name" ]]; then
+        print_error "Branch name is required"
+        echo "Usage: wt remove <branch-name>"
+        echo "Note: Install fzf for interactive worktree selection"
+        exit 1
+    fi
+    
+    # If branch name provided, try to find the worktree
+    local worktree_path=""
+    
+    # First, check our standard location
+    local standard_path="$HOME/.worktrees/$project_name/$branch_name"
+    if [[ -d "$standard_path" ]]; then
+        worktree_path="$standard_path"
+    else
+        # Try to find the worktree by branch name
+        worktree_path=$(git worktree list --porcelain | grep -B1 "branch refs/heads/$branch_name$" | grep "^worktree" | cut -d' ' -f2)
+        
+        if [[ -z "$worktree_path" ]]; then
+            print_error "No worktree found for branch '$branch_name'"
+            echo "Available worktrees:"
+            git worktree list
+            exit 1
+        fi
+    fi
+    
+    print_info "Removing worktree at: $worktree_path"
+    git worktree remove "$worktree_path"
+    
+    print_success "Removed worktree for branch '$branch_name'"
+}
+
+# Function to checkout an existing branch into a new worktree
+checkout_worktree() {
+    local branch_name="$1"
+    
+    # If no branch name provided and fzf is available, use interactive selection
+    if [[ -z "$branch_name" ]] && command -v fzf >/dev/null 2>&1; then
+        print_info "Select a branch to checkout:"
+        branch_name=$(git branch -a --format='%(refname:short)' | sed 's|^origin/||' | sort -u | fzf --height=40% --reverse --prompt="Select branch: ")
+        
+        if [[ -z "$branch_name" ]]; then
+            print_error "No branch selected"
+            exit 1
+        fi
+    elif [[ -z "$branch_name" ]]; then
+        print_error "Branch name is required"
+        echo "Usage: wt checkout <branch-name>"
+        echo "Note: Install fzf for interactive branch selection"
+        exit 1
+    fi
+    
+    # Get project name
+    local project_name=$(get_project_name)
+    
+    # Define worktree path
+    local worktree_base="$HOME/.worktrees"
+    local project_dir="$worktree_base/$project_name"
+    local worktree_path="$project_dir/$branch_name"
+    
+    # Ensure directories exist
+    ensure_directory "$worktree_base"
+    ensure_directory "$project_dir"
+    
+    # Check if worktree already exists
+    if [[ -d "$worktree_path" ]]; then
+        print_error "Worktree already exists at: $worktree_path"
+        exit 1
+    fi
+    
+    # Check if branch exists
+    if ! git show-ref --verify --quiet "refs/heads/$branch_name"; then
+        print_error "Branch '$branch_name' does not exist"
+        echo "Use 'wt new $branch_name' to create a new branch"
+        exit 1
+    fi
+    
+    # Create the worktree for existing branch
+    print_info "Creating worktree for existing branch '$branch_name'..."
+    git worktree add "$worktree_path" "$branch_name"
+    
+    print_success "Created worktree at: $worktree_path"
+    echo "cd \"$worktree_path\""
+}
+
+# Function to visit (cd to) a worktree
+visit_worktree() {
+    local branch_name="$1"
+    
+    # If no branch name provided and fzf is available, use interactive selection
+    if [[ -z "$branch_name" ]] && command -v fzf >/dev/null 2>&1; then
+        # Get all worktrees and let user select
+        print_info "Select a worktree to visit:"
+        local selected=$(git worktree list | grep -v '(bare)' | fzf --height=40% --reverse --prompt="Select worktree to visit: " | awk '{print $1}')
+        
+        if [[ -z "$selected" ]]; then
+            print_error "No worktree selected"
+            exit 1
+        fi
+        
+        # Output cd command for the shell to execute
+        echo "cd \"$selected\""
+        return 0
+    elif [[ -z "$branch_name" ]]; then
+        print_error "Branch name is required"
+        echo "Usage: wt visit <branch-name>" >&2
+        echo "Note: Install fzf for interactive worktree selection" >&2
+        exit 1
+    fi
+    
+    # If branch name provided, try to find the worktree
+    local worktree_path=""
+    
+    # First, check our standard location
+    local project_name=$(get_project_name)
+    local standard_path="$HOME/.worktrees/$project_name/$branch_name"
+    if [[ -d "$standard_path" ]]; then
+        worktree_path="$standard_path"
+    else
+        # Try to find the worktree by branch name
+        worktree_path=$(git worktree list --porcelain | grep -B1 "branch refs/heads/$branch_name$" | grep "^worktree" | cut -d' ' -f2)
+        
+        if [[ -z "$worktree_path" ]]; then
+            print_error "No worktree found for branch '$branch_name'" >&2
+            echo "Available worktrees:" >&2
+            git worktree list >&2
+            exit 1
+        fi
+    fi
+    
+    # Output cd command for the shell to execute
+    echo "cd \"$worktree_path\""
+}
+
+# Function to show help
+show_help() {
+    cat << EOF
+Git Worktree Manager (wt)
+
+A script to manage git worktrees more easily. Worktrees are created in:
+  ~/.worktrees/PROJECT/BRANCH
+
+Commands:
+  wt new <branch-name>      Create a new branch and worktree
+  wt checkout [branch-name] Create a worktree for an existing branch
+                           (interactive selection with fzf if no branch specified)
+  wt list                   List all worktrees for the current project
+  wt remove [branch-name]   Remove a worktree
+                           (interactive selection with fzf if no branch specified)
+  wt visit [branch-name]    Change directory to a worktree
+                           (interactive selection with fzf if no branch specified)
+  wt help                   Show this help message
+
+Examples:
+  # Create a new branch 'feature-xyz' with a worktree
+  wt new feature-xyz
+
+  # Create a worktree for existing branch 'main'
+  wt checkout main
+
+  # Interactive branch selection with fzf (if installed)
+  wt checkout
+
+  # List all worktrees for current project
+  wt list
+
+  # Remove the worktree for branch 'old-feature'
+  wt remove old-feature
+
+  # Interactive worktree removal with fzf (if installed)
+  wt remove
+
+  # Visit a worktree (requires command substitution)
+  \$(wt visit feature-xyz)
+
+  # Interactive worktree visit with fzf (if installed)
+  \$(wt visit)
+
+Tab Completion:
+  The wt command supports tab completion for checkout, remove, and visit.
+  Source ~/.dotfiles/git/completion.zsh in your shell to enable.
+
+FZF Keybindings (optional):
+  Add these to your .zshrc for quick access:
+  bindkey '^G^W' fzf-wt-checkout-widget  # Ctrl-G Ctrl-W
+  bindkey '^G^X' fzf-wt-remove-widget   # Ctrl-G Ctrl-X
+  bindkey '^G^V' fzf-wt-visit-widget    # Ctrl-G Ctrl-V
+EOF
+}
+
+# Main script logic
+case "${1:-}" in
+    new)
+        create_worktree "$2"
+        ;;
+    checkout)
+        checkout_worktree "$2"
+        ;;
+    list)
+        list_worktrees
+        ;;
+    remove)
+        remove_worktree "$2"
+        ;;
+    visit)
+        visit_worktree "$2"
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    *)
+        if [[ -n "${1:-}" ]]; then
+            print_error "Unknown command: $1"
+        fi
+        show_help
+        exit 1
+        ;;
+esac
