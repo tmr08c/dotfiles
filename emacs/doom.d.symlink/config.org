@@ -411,6 +411,66 @@ I may check my feeds across multiple machines. To keep the database in sync, I w
 #+begin_src elisp
 (advice-add 'elfeed-kill-buffer :before 'elfeed-db-save-safe)
 #+end_src
+
+*** Saved Filters
+
+Elfeed supports saving filters using Emacs' built-in bookmark system, but we can also create quick shortcuts for commonly used filters based on the tags in our =elfeed.org= file.
+
+#+begin_src elisp
+(after! elfeed
+  ;; Quick filter functions for common searches
+  (defun tr/elfeed-filter-all ()
+    "Show all unread entries from the last 3 months"
+    (interactive)
+    (elfeed-search-set-filter "@3-month-ago +unread"))
+
+  (defun tr/elfeed-filter-jobs ()
+    "Show unread job postings"
+    (interactive)
+    (elfeed-search-set-filter "@3-month-ago +unread +jobs"))
+
+  (defun tr/elfeed-filter-emacs ()
+    "Show unread Emacs-related posts"
+    (interactive)
+    (elfeed-search-set-filter "@3-month-ago +unread +emacs"))
+
+  (defun tr/elfeed-filter-programming ()
+    "Show unread programming posts"
+    (interactive)
+    (elfeed-search-set-filter "@3-month-ago +unread +programming"))
+
+  (defun tr/elfeed-filter-productivity ()
+    "Show unread productivity posts"
+    (interactive)
+    (elfeed-search-set-filter "@3-month-ago +unread +producivity"))
+
+  (defun tr/elfeed-filter-today ()
+    "Show all posts from today"
+    (interactive)
+    (elfeed-search-set-filter "@1-day-ago"))
+
+  (defun tr/elfeed-filter-week ()
+    "Show unread posts from this week"
+    (interactive)
+    (elfeed-search-set-filter "@1-week-ago +unread"))
+
+  ;; Keybindings for quick filters and bookmark management
+  (map! :map elfeed-search-mode-map
+        :localleader
+        (:prefix ("f" . "filters")
+         :desc "All unread" "a" #'tr/elfeed-filter-all
+         :desc "Jobs" "j" #'tr/elfeed-filter-jobs
+         :desc "Emacs" "e" #'tr/elfeed-filter-emacs
+         :desc "Programming" "p" #'tr/elfeed-filter-programming
+         :desc "Productivity" "P" #'tr/elfeed-filter-productivity
+         :desc "Today" "t" #'tr/elfeed-filter-today
+         :desc "This week" "w" #'tr/elfeed-filter-week)
+        :localleader
+        (:prefix ("b" . "bookmarks")
+         :desc "Save filter bookmark" "s" #'bookmark-set
+         :desc "Jump to filter bookmark" "j" #'bookmark-jump
+         :desc "List bookmarks" "l" #'bookmark-bmenu-list)))
+#+end_src
 ** email
 I am using the ~mu4e~ module from DOOM for managing email.
 
