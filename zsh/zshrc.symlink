@@ -77,5 +77,8 @@ if [ -x "$(command -v direnv)" ]; then
   direnv() { asdf exec direnv "$@"; }
 fi
 
+# mise activation for interactive shells
+eval "$(mise activate zsh)"
+
 # zprof
 source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
