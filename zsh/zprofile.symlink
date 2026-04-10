@@ -10,6 +10,9 @@
 # processes](https://github.com/neoclide/coc-solargraph/issues/12)
 [ -f $(brew --prefix asdf)/libexec/asdf.sh ] && source $(brew --prefix asdf)/libexec/asdf.sh
 
+# mise shims for non-interactive login shells (e.g., editor-spawned processes)
+eval "$(mise activate zsh --shims)"
+
 # Run script to remap caps lock to control
 #
 # At the time of writing (2025-02-17) there doesn't appear to be a way to manage
