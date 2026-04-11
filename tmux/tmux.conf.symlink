@@ -89,5 +89,5 @@ bind -r L resize-pane -R 5
 # Enter copy mode with Prefix + [
 bind [ copy-mode
 
-# Paste from system clipboard with Prefix + p
-bind p run-shell "pbpaste | tmux load-buffer - && tmux paste-buffer"
+# Paste from system clipboard with Prefix + P
+bind P run-shell "pbpaste | tmux load-buffer - && tmux paste-buffer"
