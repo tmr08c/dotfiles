@@ -28,6 +28,18 @@ set -g status-fg white
 # https://devel.tech/tips/n/tMuXm4vP/reloading-config-from-inside-tmux/
 bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
 
+#
+# Panes
+#
+
+# Pane splits should open to the same path as the current pane
+bind '"' split-window -v -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+
+#
+# End Panes
+#
+
 # Numbering
 
 # Start tabs at index 1
