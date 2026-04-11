@@ -412,6 +412,18 @@ I may check my feeds across multiple machines. To keep the database in sync, I w
 (advice-add 'elfeed-kill-buffer :before 'elfeed-db-save-safe)
 #+end_src
 
+*** Fix quit keybinding :workaround:
+
+For some reason, the evil keybinding from Doom's config isn't being applied properly. Let's explicitly set it:
+
+#+begin_src elisp
+(after! elfeed
+  (evil-define-key 'normal elfeed-search-mode-map
+    "q" #'elfeed-kill-buffer))
+#+end_src
+
+We should periodically check if this is still necessary.
+
 *** Saved Filters
 
 Elfeed supports saving filters using Emacs' built-in bookmark system, but we can also create quick shortcuts for commonly used filters based on the tags in our =elfeed.org= file.
@@ -444,6 +456,11 @@ Elfeed supports saving filters using Emacs' built-in bookmark system, but we can
     (interactive)
     (elfeed-search-set-filter "@3-month-ago +unread +producivity"))
 
+  (defun tr/elfeed-filter-coffee ()
+    "Show unread coffee posts"
+    (interactive)
+    (elfeed-search-set-filter "@3-month-ago +unread +coffee"))
+
   (defun tr/elfeed-filter-today ()
     "Show all posts from today"
     (interactive)
@@ -463,6 +480,7 @@ Elfeed supports saving filters using Emacs' built-in bookmark system, but we can
          :desc "Emacs" "e" #'tr/elfeed-filter-emacs
          :desc "Programming" "p" #'tr/elfeed-filter-programming
          :desc "Productivity" "P" #'tr/elfeed-filter-productivity
+         :desc "Coffee" "c" #'tr/elfeed-filter-coffee
          :desc "Today" "t" #'tr/elfeed-filter-today
          :desc "This week" "w" #'tr/elfeed-filter-week)
         :localleader
@@ -471,6 +489,7 @@ Elfeed supports saving filters using Emacs' built-in bookmark system, but we can
          :desc "Jump to filter bookmark" "j" #'bookmark-jump
          :desc "List bookmarks" "l" #'bookmark-bmenu-list)))
 #+end_src
+
 ** email
 I am using the ~mu4e~ module from DOOM for managing email.
 
