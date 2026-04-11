@@ -14,3 +14,10 @@ config.symlink/asdf-direnv/zshrc
 node_modules
 
 **/.claude/settings.local.json
+**/.claude/worktrees
+
+# raycast - managed extension state, not user config
+config.symlink/raycast/
+
+# tidewave - all-defaults config, machine-specific
+config.symlink/tidewave/
