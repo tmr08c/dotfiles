@@ -693,9 +693,11 @@ Can be a specific version string (e.g., \"v0.1.0\") or \"latest\"."
 (defvar tr/explorer-install-dir (expand-file-name "~/.local/bin")
   "Directory where the Expert binary is installed.")
 
+;; Add install dir to exec-path at load time so executable-find works immediately.
+(add-to-list 'exec-path tr/explorer-install-dir)
+
 (defun tr/ensure-explorer-installed ()
   "Check if Explorer is installed and prompt to install if not."
-  (add-to-list 'exec-path tr/explorer-install-dir)
   (unless (or (executable-find "expert_linux_amd64")
               (executable-find "expert_darwin_amd64")
               (executable-find "expert_darwin_arm64")

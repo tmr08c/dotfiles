@@ -9,7 +9,7 @@
 	url = https://github.com/dexpota/kitty-themes.git
 [submodule "emacs/emacs.d.symlink"]
 	path = emacs/emacs.d.symlink
-	url = https://github.com/doomemacs/doomemacs
+	url = https://github.com/doomemacs/doomemacs.git
 [submodule "zig/zls"]
 	path = zig/zls
 	url = https://github.com/zigtools/zls
