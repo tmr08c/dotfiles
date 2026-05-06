@@ -690,8 +690,12 @@ Can be a specific version string (e.g., \"v0.1.0\") or \"latest\"."
      (t
       (list :binary "expert_linux_amd64" :url (concat base-url "expert_linux_amd64"))))))
 
+(defvar tr/explorer-install-dir (expand-file-name "~/.local/bin")
+  "Directory where the Expert binary is installed.")
+
 (defun tr/ensure-explorer-installed ()
   "Check if Explorer is installed and prompt to install if not."
+  (add-to-list 'exec-path tr/explorer-install-dir)
   (unless (or (executable-find "expert_linux_amd64")
               (executable-find "expert_darwin_amd64")
               (executable-find "expert_darwin_arm64")
@@ -700,14 +704,13 @@ Can be a specific version string (e.g., \"v0.1.0\") or \"latest\"."
       (let* ((download-info (tr/get-explorer-download-url))
              (binary-name (plist-get download-info :binary))
              (download-url (plist-get download-info :url))
-             (install-dir (expand-file-name "~/.local/bin"))
-             (binary-path (expand-file-name binary-name install-dir)))
-        (unless (file-directory-p install-dir)
-          (make-directory install-dir t))
+             (binary-path (expand-file-name binary-name tr/explorer-install-dir)))
+        (unless (file-directory-p tr/explorer-install-dir)
+          (make-directory tr/explorer-install-dir t))
         (message "Downloading Explorer...")
         (url-copy-file download-url binary-path t)
         (set-file-modes binary-path #o755)
-        (message "Explorer installed to %s. Please ensure %s is in your PATH." binary-path install-dir)))))
+        (message "Explorer installed to %s." binary-path)))))
 
 (defun tr/update-explorer ()
   "Update Explorer language server to the latest nightly build."
@@ -715,8 +718,7 @@ Can be a specific version string (e.g., \"v0.1.0\") or \"latest\"."
   (let* ((download-info (tr/get-explorer-download-url))
          (binary-name (plist-get download-info :binary))
          (download-url (plist-get download-info :url))
-         (install-dir (expand-file-name "~/.local/bin"))
-         (binary-path (expand-file-name binary-name install-dir)))
+         (binary-path (expand-file-name binary-name tr/explorer-install-dir)))
     (when (y-or-n-p "Update Explorer to latest nightly build? ")
       (message "Downloading latest Explorer...")
       (when (file-exists-p binary-path)
@@ -739,9 +741,11 @@ Now, let's tell ~eglot~ to use our expert binary.
                    nil nil #'equal)
         (if (and (fboundp 'w32-shell-dos-semantics)
                  (w32-shell-dos-semantics))
-            '("expert_windows_amd64")
+            '("expert_windows_amd64" "--stdio")
           (eglot-alternatives
-           '("expert_linux_amd64" ("expert_darwin_arm64" "--stdio"))))))
+           '(("expert_darwin_arm64" "--stdio")
+             ("expert_darwin_amd64" "--stdio")
+             ("expert_linux_amd64" "--stdio"))))))
 #+end_src
 **** ExUnit
 
