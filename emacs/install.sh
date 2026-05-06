@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Set up DOOM emacs
 
-~/.emacs.d/bin/doom install --force
+# Capture shell PATH and env vars so Emacs can find tools (elixir, node, etc.)
+~/.emacs.d/bin/doom env
+
 # --force suppresses prompts (e.g. rebuild confirmation after Emacs version change)
 # --rebuild unconditionally rebuilds all packages
 ~/.emacs.d/bin/doom sync --force --rebuild
