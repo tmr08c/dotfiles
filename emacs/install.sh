@@ -7,9 +7,12 @@
 ~/.emacs.d/bin/doom sync --force --rebuild
 
 # Install nerd-icons fonts. doom install no longer handles this automatically.
-emacs --batch \
-  --eval "(add-to-list 'load-path \"$(echo ~/.emacs.d/.local/straight/build-*/nerd-icons)\")" \
-  --eval "(require 'nerd-icons)" \
-  --eval "(nerd-icons-install-fonts t)"
+NERD_ICONS_PATH=$(ls -d ~/.emacs.d/.local/straight/build-*/nerd-icons 2>/dev/null | head -1)
+if [ -n "$NERD_ICONS_PATH" ]; then
+  emacs --batch \
+    --eval "(add-to-list 'load-path \"$NERD_ICONS_PATH\")" \
+    --eval "(require 'nerd-icons)" \
+    --eval "(nerd-icons-install-fonts t)"
+fi
 
 exit 0
