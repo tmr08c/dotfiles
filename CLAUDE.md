@@ -6,7 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a dotfiles repository for managing system configuration files, organized topically. Each technology/tool has its own directory with specific configurations:
 
-- `asdf/` - Version manager configuration
 - `bash/` - Bash shell configuration
 - `bin/` - Executable scripts (added to PATH)
 - `emacs/` - Doom Emacs configuration
@@ -76,7 +75,7 @@ The dotfiles provide an optimized development environment with:
    - Vim/Neovim
 4. **Package Management**:
    - Homebrew for system packages
-   - asdf for language versions
+   - mise for language versions
 5. **Terminal Tools**:
    - fzf for fuzzy finding
    - exa for enhanced directory listings
