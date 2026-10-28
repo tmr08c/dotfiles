@@ -31,7 +31,9 @@ git_prompt_info () {
 need_push () {
   if [[ -n $prompt_git_branch ]]
   then
-    number=${#${(f)$($git cherry -v origin/$prompt_git_branch 2>/dev/null)}}
+    local -a unpushed
+    unpushed=(${(f)"$($git cherry -v origin/$prompt_git_branch 2>/dev/null)"})
+    number=${#unpushed}
 
     if [[ $number == 0 ]]
     then
