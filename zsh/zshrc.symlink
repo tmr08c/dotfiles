@@ -73,12 +73,7 @@ source <(fzf --zsh)
 # Add direnv hook to load `.envrc` files
 if [ -x "$(command -v direnv)" ]; then
   eval "$(direnv hook zsh)"
-  # A shortcut to access the asdf-managed version of `direnv`
-  direnv() { asdf exec direnv "$@"; }
 fi
 
 # mise activation for interactive shells
 eval "$(mise activate zsh)"
-
-# zprof
-source "${XDG_CONFIG_HOME:-$HOME/.config}/asdf-direnv/zshrc"
