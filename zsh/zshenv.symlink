@@ -8,9 +8,37 @@
 #
 # One example where this is useful is setting up 
 # aliases to work with Vim
-if [[ `uname` == "Darwin" ]]
+if [[ $OSTYPE == darwin* ]]
 then
   alias darkMode="2>/dev/null defaults read -g AppleInterfaceStyle"
 fi
 
 skip_global_compinit=1
+
+# Source the output of a slow `tool init`-style command (e.g. `direnv hook zsh`)
+# from a cache file instead of running it on every shell start. The cache is
+# regenerated when the command's binary resolves to a new path (e.g. after a
+# Homebrew upgrade), when a versioned binary path embedded in the output no
+# longer exists (e.g. a mise shim'd tool was upgraded), or when the cache file
+# is deleted (`rm -rf ~/.cache/zsh`).
+#
+#   cached_eval <name> <command> [args...]
+cached_eval() {
+  local name=$1; shift
+  local cache=${XDG_CACHE_HOME:-$HOME/.cache}/zsh/$name.zsh
+  local bin=${commands[$1]:-$1}
+  local stamp="# ${bin:A}" first req out
+  if [[ -r $cache ]]; then
+    { IFS= read -r first; IFS= read -r req } < $cache
+    req=${req#\# requires: }
+    [[ -n $req && ! -x $req ]] && first=
+  fi
+  if [[ $first != $stamp ]]; then
+    out=$("$@") || return 1
+    req=
+    [[ $out =~ "(/[^\"' ]*/${1:t})[\"' ]" ]] && req=$match[1]
+    mkdir -p ${cache:h}
+    print -r -- "$stamp"$'\n'"# requires: $req"$'\n'"$out" > $cache
+  fi
+  source $cache
+}

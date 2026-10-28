@@ -3,10 +3,11 @@
 # path first.
 #
 # See https://github.com/Homebrew/brew/issues/9177 for more background
-[ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+[ -f /opt/homebrew/bin/brew ] && cached_eval brew-shellenv /opt/homebrew/bin/brew shellenv
 
-# mise shims for non-interactive login shells (e.g., editor-spawned processes)
-eval "$(mise activate zsh --shims)"
+# mise shims for non-interactive login shells (e.g., editor-spawned processes).
+# Interactive shells get the full `mise activate` in zshrc instead.
+[[ -o interactive ]] || eval "$(mise activate zsh --shims)"
 
 # Run script to remap caps lock to control
 #

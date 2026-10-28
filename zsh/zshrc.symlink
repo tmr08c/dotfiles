@@ -68,11 +68,11 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
-source <(fzf --zsh)
+cached_eval fzf fzf --zsh
 
 # Add direnv hook to load `.envrc` files
 if [ -x "$(command -v direnv)" ]; then
-  eval "$(direnv hook zsh)"
+  cached_eval direnv direnv hook zsh
 fi
 
 # mise activation for interactive shells
