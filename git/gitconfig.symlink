@@ -16,6 +16,10 @@
         ui = true
 [core]
         excludesfile = ~/.gitignore
+        # Built-in filesystem watcher daemon + untracked cache speed up
+        # `git status` (and the prompt) in large repos
+        fsmonitor = true
+        untrackedCache = true
 [apply]
         whitespace = nowarn
 [mergetool]
