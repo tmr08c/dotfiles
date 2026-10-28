@@ -83,7 +83,8 @@ if [ -x "$(command -v direnv)" ]; then
 fi
 
 # mise activation for interactive shells
-cached_eval mise-activate mise activate zsh
+# Not cached: the output embeds the current $PATH
+eval "$(mise activate zsh)"
 # Activation already ran `mise hook-env`; mark it as done so mise's precmd hook
 # doesn't run it again before the first prompt
 export __MISE_ZSH_CHPWD_RAN=1
