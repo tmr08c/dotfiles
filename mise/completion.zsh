@@ -1,1 +1,1 @@
-eval "$(mise completion zsh)"
+cached_eval mise-completion mise completion zsh
