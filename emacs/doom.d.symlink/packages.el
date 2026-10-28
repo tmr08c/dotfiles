@@ -49,7 +49,7 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! lsp-origami)
+(package! lsp-origami :pin "a7bc08c61dd402ff9ef5d111beb133ddf5d6ca16")
 
 (when (modulep! :lang zig)
   (package! ob-zig :recipe (:host github :repo "jolby/ob-zig.el")))
@@ -57,7 +57,7 @@
 (when (modulep! :lang elixir )
   (package! mix :pin "16cc69c"))
 
-(package! org-roam-ui)
+(package! org-roam-ui :pin "2894dcbf56d2eca8d3cae2b1ae183f51724b5db6")
 
 ;; Do not install mu4e-alert as a part of the mu4e module.
 ;;

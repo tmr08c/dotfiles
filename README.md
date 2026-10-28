@@ -77,7 +77,7 @@ There's a few special files in the hierarchy.
 Run this:
 
 ```sh
-git clone --recurse-submodules https://github.com/tmr08c/dotfiles.git ~/.dotfiles &&
+git clone https://github.com/tmr08c/dotfiles.git ~/.dotfiles &&
 cd ~/.dotfiles &&
 script/bootstrap
 ```
@@ -92,6 +92,9 @@ which sets up a few paths that'll be different on your particular machine.
 defaults, and so on. Tweak this script, and occasionally run `dot` from
 time to time to keep your environment fresh and up-to-date. You can find
 this script in `bin/`.
+
+Doom Emacs is cloned to `~/.config/emacs` by `emacs/install.sh`, checked out
+at the commit in `emacs/doom-version`. See that script for how to upgrade.
 
 ## bugs
 

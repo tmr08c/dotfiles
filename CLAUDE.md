@@ -28,7 +28,7 @@ This is a dotfiles repository for managing system configuration files, organized
 
 ```bash
 # Clone and set up dotfiles
-git clone --recurse-submodules https://github.com/tmr08c/dotfiles.git ~/.dotfiles
+git clone https://github.com/tmr08c/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 script/bootstrap
 
@@ -62,6 +62,9 @@ emacs
 # Run Doom Emacs commands (when installed)
 doom sync  # Synchronize packages
 doom doctor  # Check for problems
+
+# Doom lives in ~/.config/emacs, pinned to the commit in emacs/doom-version.
+# To upgrade: doom upgrade, then write the new HEAD to emacs/doom-version
 ```
 
 ## Development Environment
