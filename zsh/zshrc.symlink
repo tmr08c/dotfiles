@@ -4,7 +4,7 @@
 # zmodload zsh/zprof
 
 # shortcut to this dotfiles path is $ZSH
-export ZSH=$HOME/.dotfiles
+export ZSH=${ZSH:-$HOME/.dotfiles}
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/code
@@ -45,11 +45,14 @@ fi
 autoload -Uz compinit
 # Cache compinit and only refresh once a day
 # See https://htr3n.github.io/2018/07/faster-zsh/ for more
-if [ "$(date +'%j')" != "$(/usr/bin/stat -f '%Sm' -t '%j' ${ZDOTDIR:-$HOME}/.zcompdump 2>/dev/null)" ]; then
+# (glob qualifiers: N = no error if missing, mh+23 = modified 24+ hours ago)
+stale_zcompdump=(${ZDOTDIR:-$HOME}/.zcompdump(N.mh+23))
+if [[ ! -f ${ZDOTDIR:-$HOME}/.zcompdump || -n $stale_zcompdump ]]; then
   compinit
 else
   compinit -C
 fi
+unset stale_zcompdump
 
 # load completion.zsh files after compinit so `compdef` is defined
 for file in ${(M)config_files:#*/completion.zsh}
@@ -75,6 +78,9 @@ if [ -x "$(command -v direnv)" ]; then
 fi
 
 # mise activation for interactive shells
-eval "$(mise activate zsh)"
+cached_eval mise-activate mise activate zsh
+# Activation already ran `mise hook-env`; mark it as done so mise's precmd hook
+# doesn't run it again before the first prompt
+export __MISE_ZSH_CHPWD_RAN=1
 
 export PATH="$HOME/.local/bin:$PATH"

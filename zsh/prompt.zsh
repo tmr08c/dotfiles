@@ -15,9 +15,8 @@ git_branch() {
 
 # Branch only; skips the dirty check since `git status` is slow in large repos
 git_dirty() {
-  local branch
-  branch=$(git_prompt_info) || return
-  echo "on %{$fg_bold[yellow]%}$branch%{$reset_color%}"
+  [[ -n $prompt_git_branch ]] || return
+  echo "on %{$fg_bold[yellow]%}$prompt_git_branch%{$reset_color%}"
 }
 
 git_prompt_info () {
@@ -30,9 +29,9 @@ git_prompt_info () {
 # care about one specific origin. If this is not the case, you might want to use
 # `$git cherry -v @{upstream}` instead.
 need_push () {
-  if [ $($git rev-parse --is-inside-work-tree 2>/dev/null) ]
+  if [[ -n $prompt_git_branch ]]
   then
-    number=$($git cherry -v origin/$(git symbolic-ref --short HEAD) 2>/dev/null | wc -l | bc)
+    number=${#${(f)$($git cherry -v origin/$prompt_git_branch 2>/dev/null)}}
 
     if [[ $number == 0 ]]
     then
@@ -64,7 +63,33 @@ set_prompt () {
   export RPROMPT="%{$fg_bold[cyan]%}%{$reset_color%}"
 }
 
+# Find the current branch by reading .git/HEAD directly instead of running
+# git, so the prompt costs nothing outside of repos. Handles worktrees and
+# submodules, where `.git` is a file pointing at the real git dir.
+set_prompt_git_branch() {
+  local dir=$PWD gitdir head
+  prompt_git_branch=
+  while true; do
+    if [[ -d $dir/.git ]]; then
+      gitdir=$dir/.git
+      break
+    elif [[ -f $dir/.git ]]; then
+      gitdir=$(<$dir/.git)
+      gitdir=${gitdir#gitdir: }
+      [[ $gitdir == /* ]] || gitdir=$dir/$gitdir
+      break
+    fi
+    [[ -z $dir ]] && return
+    dir=${dir%/*}
+  done
+  [[ -r $gitdir/HEAD ]] || return
+  head=$(<$gitdir/HEAD)
+  [[ $head == "ref: refs/heads/"* ]] && prompt_git_branch=${head#ref: refs/heads/}
+}
+
 precmd() {
+  # Look up the branch once per prompt; git_dirty and need_push both use it
+  set_prompt_git_branch
   title "zsh" "%m" "%55<...<%~"
   set_prompt
 }
