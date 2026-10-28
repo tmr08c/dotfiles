@@ -568,6 +568,68 @@ Sort files by recently active buffers and then recently opened files.
 (setq projectile-sort-order 'recently-active)
 #+end_src
 
+*** Magit
+**** Worktrees
+
+I manage git worktrees from the shell with my own [[file:~/.dotfiles/bin/wt][=wt=]] script, which
+always places them at a predictable location:
+
+#+begin_example
+~/.worktrees/PROJECT/BRANCH
+#+end_example
+
+where =PROJECT= is the basename of the repository's main working tree and
+=BRANCH= is the branch name (used verbatim, so a slashed branch like
+=feature/foo= nests as =~/.worktrees/PROJECT/feature/foo=).
+
+I'd like Magit's worktree commands (the =Z= transient in the status buffer:
+"branch and worktree", "worktree", …) to land in the *same* place, so worktrees
+created from either tool live side by side and =wt list= / =wt visit= keep
+working regardless of which tool created them.
+
+Magit 4.4 exposes exactly the right seam for this:
+[[https://magit.vc/manual/magit/Worktree.html][=magit-read-worktree-directory-function=]]. It is called with =(PROMPT BRANCH)=
+(=BRANCH= is nil when checking out a bare commit or a remote branch) and returns
+the directory for the new worktree. The built-in choices offer /sibling/ or
+/nested/ layouts; here we point it at =wt='s layout instead.
+
+We still go through =read-directory-name= so the computed path is only a
+*default* — hit =RET= to accept =wt='s location, or edit it for a one-off. The
+=~/.worktrees= base is kept in a variable so it stays a single, obvious source
+of truth mirroring the =worktree_base= in =bin/wt= (=wt= hard-codes
+=$HOME/.worktrees=; if that ever changes, update both).
+
+#+begin_src elisp
+(after! magit
+  (defvar tr/worktree-base (expand-file-name "~/.worktrees/")
+    "Base directory for git worktrees.
+Mirrors the layout used by the `wt' shell script (bin/wt), which
+places worktrees at ~/.worktrees/PROJECT/BRANCH.")
+
+  (defun tr/worktree-project-name ()
+    "Return PROJECT: the basename of the repository's main working tree.
+Uses the primary worktree (the first entry of `magit-list-worktrees')
+rather than `magit-toplevel' so the name is stable even when invoked
+from inside an existing worktree."
+    (file-name-nondirectory
+     (directory-file-name (or (caar (magit-list-worktrees))
+                              (magit-toplevel)))))
+
+  (defun tr/magit-read-worktree-directory (prompt branch)
+    "Read a worktree directory, defaulting to wt's ~/.worktrees/PROJECT/BRANCH.
+Suitable as `magit-read-worktree-directory-function'.  BRANCH is nil
+when Magit is checking out a bare commit or remote branch; in that case
+we default to the project's base directory and let the user complete it."
+    (let ((base (file-name-as-directory
+                 (expand-file-name (tr/worktree-project-name)
+                                   tr/worktree-base))))
+      (make-directory base t)
+      (read-directory-name prompt base nil nil branch)))
+
+  (setq magit-read-worktree-directory-function
+        #'tr/magit-read-worktree-directory))
+#+end_src
+
 *** Formatting
 
 Auto-formatting is enabled via =(format +onsave)= in =init.el=. There are some modes where this doesn't always work as well, so we can disable it.
