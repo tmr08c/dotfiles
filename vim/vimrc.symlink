@@ -1,8 +1,3 @@
-"Load Vundle config
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
-endif
-
 " Have :sh source .bashrc
 " http://stackoverflow.com/questions/1694599/how-do-i-get-vims-sh-command-to-source-my-bashrc
 set shell=bash\ --login
