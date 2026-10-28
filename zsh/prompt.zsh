@@ -13,18 +13,11 @@ git_branch() {
   echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
 }
 
+# Branch only; skips the dirty check since `git status` is slow in large repos
 git_dirty() {
-  if $(! $git status -s &> /dev/null)
-  then
-    echo ""
-  else
-    if [[ $($git status --porcelain) == "" ]]
-    then
-      echo "on %{$fg_bold[green]%}$(git_prompt_info)%{$reset_color%}"
-    else
-      echo "on %{$fg_bold[red]%}$(git_prompt_info)%{$reset_color%}"
-    fi
-  fi
+  local branch
+  branch=$(git_prompt_info) || return
+  echo "on %{$fg_bold[yellow]%}$branch%{$reset_color%}"
 }
 
 git_prompt_info () {
