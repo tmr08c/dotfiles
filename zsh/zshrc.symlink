@@ -17,9 +17,11 @@ then
   source ~/.localrc
 fi
 
-# all of our zsh files
+# all of our zsh files. Only look two levels deep (e.g. topic/*.zsh and
+# config.symlink/nvim/*.zsh); a recursive `**` glob crawls big untracked trees
+# like emacs packages and costs ~20ms
 typeset -U config_files
-config_files=($ZSH/**/*.zsh)
+config_files=($ZSH/*/*.zsh(N) $ZSH/*/*/*.zsh(N))
 
 # load the path files
 for file in ${(M)config_files:#*/path.zsh}
@@ -53,6 +55,10 @@ else
   compinit -C
 fi
 unset stale_zcompdump
+# Compile the dump so `compinit` loads it faster (sourcing prefers a newer .zwc)
+if [[ ! ${ZDOTDIR:-$HOME}/.zcompdump.zwc -nt ${ZDOTDIR:-$HOME}/.zcompdump ]]; then
+  zcompile ${ZDOTDIR:-$HOME}/.zcompdump
+fi
 
 # load completion.zsh files after compinit so `compdef` is defined
 for file in ${(M)config_files:#*/completion.zsh}

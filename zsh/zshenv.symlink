@@ -39,6 +39,7 @@ cached_eval() {
     [[ $out =~ "(/[^\"' ]*/${1:t})[\"' ]" ]] && req=$match[1]
     mkdir -p ${cache:h}
     print -r -- "$stamp"$'\n'"# requires: $req"$'\n'"$out" > $cache
+    zcompile $cache
   fi
   source $cache
 }
