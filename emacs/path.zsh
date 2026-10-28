@@ -1,4 +1,4 @@
 # Make DOOM Emacs Utility, `doom` available
 #
-# https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#the-bindoom-utility
-export PATH=:"$HOME/.emacs.d/bin:$PATH"
+# https://github.com/doomemacs/doomemacs/blob/master/docs/getting_started.org#the-bindoom-utility
+export PATH="$HOME/.config/emacs/bin:$PATH"
